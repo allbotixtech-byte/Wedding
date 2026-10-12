@@ -1,0 +1,22 @@
+{
+  "name": "reception-invitation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ghibli-inspired animated reception invitation for Kenvi Dwivedi & Puru Tyagi — interactive website + MP4 renderer",
+  "type": "module",
+  "scripts": {
+    "dev": "node tools/serve.mjs",
+    "start": "node tools/serve.mjs",
+    "build": "node tools/build-site.mjs",
+    "preview": "node tools/serve.mjs --dir=dist",
+    "render": "node render/render.mjs --format=vertical",
+    "render:horizontal": "node render/render.mjs --format=horizontal",
+    "render:all": "node render/render.mjs --format=vertical && node render/render.mjs --format=horizontal",
+    "verify": "node render/verify.mjs",
+    "music": "node tools/compose-music.mjs",
+    "backgrounds": "node tools/paint-backgrounds.mjs"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^25.13.0"
+  }
+}

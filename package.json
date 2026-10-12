@@ -1,0 +1,19 @@
+{
+  "name": "reception-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Shortcuts so the npm commands also work from this outer folder. The invitation project itself lives in reception-invitation/ (see its README.md).",
+  "scripts": {
+    "dev": "node reception-invitation/tools/serve.mjs",
+    "start": "node reception-invitation/tools/serve.mjs",
+    "build": "node reception-invitation/tools/build-site.mjs",
+    "preview": "node reception-invitation/tools/serve.mjs --dir=dist",
+    "render": "node reception-invitation/render/render.mjs --format=vertical",
+    "render:horizontal": "node reception-invitation/render/render.mjs --format=horizontal",
+    "render:all": "node reception-invitation/render/render.mjs --format=vertical && node reception-invitation/render/render.mjs --format=horizontal",
+    "verify": "node reception-invitation/render/verify.mjs",
+    "music": "node reception-invitation/tools/compose-music.mjs",
+    "backgrounds": "node reception-invitation/tools/paint-backgrounds.mjs",
+    "setup": "npm install --prefix reception-invitation"
+  }
+}

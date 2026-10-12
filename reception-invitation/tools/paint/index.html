@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Background painter</title>
+<style>body{margin:0;background:#222;color:#ddd;font:14px sans-serif}canvas{max-width:48vw;height:auto;background:#444;margin:4px}</style>
+</head>
+<body>
+<script src="core.js"></script>
+<script src="flora.js"></script>
+<script src="lights.js"></script>
+<script src="arch.js"></script>
+<script src="scenes.js"></script>
+<script src="plate-garden.js"></script>
+<script src="plate-courtyard.js"></script>
+<script src="plate-terrace.js"></script>
+<script src="plate-bluehour.js"></script>
+<script src="plate-stage.js"></script>
+<script src="sprites.js"></script>
+<script>
+/* window.PAINT.run(name, opts) paints one plate/sprite set and returns its layers as data URLs.
+   Open this page with ?show=<name> to look at a plate directly in the browser. */
+window.PAINT = {
+  names: () => Object.keys(PLATES),
+  run(name, opts = {}) {
+    const def = PLATES[name];
+    if (!def) throw new Error('unknown plate ' + name);
+    const layers = def();
+    const out = { name, layers: {} };
+    const sizes = new Set(Object.values(layers).map((c) => c.width + 'x' + c.height));
+    if (opts.preview && sizes.size > 1) { // sprites: contact sheet
+      const list = Object.entries(layers).filter(([n]) => !opts.only || opts.only.includes(n)), cell = 560, cols = Math.min(4, list.length), rows = Math.ceil(list.length / cols);
+      const L = layer(cols * cell, rows * cell); L.ctx.fillStyle = opts.bg || '#3a3a5a'; L.ctx.fillRect(0, 0, L.w, L.h);
+      list.forEach(([n, c], i) => { const k = Math.min((cell - 16) / c.width, (cell - 16) / c.height), x = (i % cols) * cell, y = Math.floor(i / cols) * cell; L.ctx.drawImage(c, x + (cell - c.width * k) / 2, y + (cell - c.height * k) / 2, c.width * k, c.height * k); L.ctx.fillStyle = '#fff'; L.ctx.font = '18px sans-serif'; L.ctx.fillText(n + ' ' + c.width + 'x' + c.height, x + 8, y + 22); });
+      out.preview = L.c.toDataURL('image/jpeg', 0.9); return out;
+    }
+    if (opts.preview) { // flattened, downscaled JPEG for quick inspection
+      const first = Object.values(layers)[0];
+      const k = Math.min(1, opts.preview / Math.max(first.width, first.height));
+      const L = layer(Math.round(first.width * k), Math.round(first.height * k));
+      L.ctx.fillStyle = opts.bg || '#2a2a33'; L.ctx.fillRect(0, 0, L.w, L.h);
+      for (const [n, c] of Object.entries(layers)) { if (opts.only && !opts.only.includes(n)) continue; if (c.width === first.width && c.height === first.height) { L.ctx.globalCompositeOperation = c._blend || 'source-over'; L.ctx.drawImage(c, 0, 0, L.w, L.h); } }
+      out.preview = L.c.toDataURL('image/jpeg', 0.9);
+      return out;
+    }
+    for (const [n, c] of Object.entries(layers)) {
+      const q = c._quality || 0.9;
+      const entry = { w: c.width, h: c.height, hd: c.toDataURL('image/webp', q) };
+      const k = c._mdScale || 2 / 3;
+      const M = layer(Math.round(c.width * k), Math.round(c.height * k));
+      M.ctx.imageSmoothingQuality = 'high'; M.ctx.drawImage(c, 0, 0, M.w, M.h);
+      entry.md = M.c.toDataURL('image/webp', q);
+      out.layers[n] = entry;
+    }
+    return out;
+  },
+};
+const show = new URLSearchParams(location.search).get('show');
+if (show) for (const [n, c] of Object.entries(PLATES[show]())) { document.body.append(n, c); }
+</script>
+</body>
+</html>

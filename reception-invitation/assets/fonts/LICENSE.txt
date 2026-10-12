@@ -1,0 +1,8 @@
+Fonts bundled with this project (all under the SIL Open Font License 1.1, https://openfontlicense.org):
+
+- Great Vibes            (c) TypeSETit, Robert Leuschke
+- Cormorant Garamond     (c) Christian Thalmann / Catharsis Fonts
+- Cinzel                 (c) Natanael Gama
+
+The .woff2 files were taken from the @fontsource npm packages (latin subsets).
+The OFL allows bundling, embedding and redistribution, including for commercial use.
