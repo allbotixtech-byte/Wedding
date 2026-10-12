@@ -1,4 +1,10 @@
+<<<<<<< HEAD
 ﻿node_modules/
 .next/
 .env
 .env.local
+=======
+node_modules/
+output/qa/
+render/ffmpeg2pass*
+>>>>>>> origin/main
