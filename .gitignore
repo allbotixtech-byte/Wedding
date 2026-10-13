@@ -1,10 +1,11 @@
-<<<<<<< HEAD
-﻿node_modules/
-.next/
+# installed packages and generated folders
+node_modules/
+dist/
+
+# local settings and secrets (this project uses none; kept as a safety net)
 .env
 .env.local
-=======
-node_modules/
-output/qa/
-render/ffmpeg2pass*
->>>>>>> origin/main
+
+# The two reference clips used as inspiration while designing. They are other creators' videos,
+# so they stay on this computer and are not published with the repository.
+/Video-*.mp4

@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "name": "reception-workspace",
   "version": "1.0.0",
   "private": true,
@@ -16,23 +15,5 @@
     "music": "node reception-invitation/tools/compose-music.mjs",
     "backgrounds": "node reception-invitation/tools/paint-backgrounds.mjs",
     "setup": "npm install --prefix reception-invitation"
-=======
-  "name": "reception-invitation",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Ghibli-inspired animated reception invitation for Kenvi Dwivedi & Puru Tyagi — interactive website + MP4 renderer",
-  "type": "module",
-  "scripts": {
-    "start": "node tools/serve.mjs",
-    "render": "node render/render.mjs --format=vertical",
-    "render:horizontal": "node render/render.mjs --format=horizontal",
-    "render:all": "node render/render.mjs --format=vertical && node render/render.mjs --format=horizontal",
-    "verify": "node render/verify.mjs",
-    "music": "node tools/compose-music.mjs",
-    "backgrounds": "node tools/paint-backgrounds.mjs"
-  },
-  "devDependencies": {
-    "puppeteer-core": "^25.13.0"
->>>>>>> origin/main
   }
 }
