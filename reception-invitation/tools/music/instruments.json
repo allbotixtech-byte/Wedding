@@ -1,0 +1,695 @@
+{
+  "banks": {
+    "gu": "sounds/soundfonts/GeneralUser-GS.sf2",
+    "ms": "sounds/soundfonts/MuseScore_General.sf3"
+  },
+  "defaultBank": "gu",
+  "parts": {
+    "bansuri": {
+      "bank": "gu",
+      "mono": true,
+      "preset": [
+        0,
+        0,
+        73
+      ],
+      "volume": 112,
+      "pan": 60,
+      "bendRange": 12,
+      "scoop": 80,
+      "kanCents": 200,
+      "phraseArchDb": 4,
+      "vibrato": {
+        "cents": 9,
+        "hz": 5.2,
+        "delay": 0.32,
+        "minDur": 0.55
+      },
+      "layers": [
+        {
+          "preset": [
+            0,
+            0,
+            77
+          ],
+          "volume": 46
+        }
+      ]
+    },
+    "violin": {
+      "bank": "gu",
+      "mono": true,
+      "preset": [
+        0,
+        0,
+        40
+      ],
+      "volume": 108,
+      "pan": 74,
+      "bendRange": 12,
+      "scoop": 55,
+      "kanCents": 200,
+      "phraseArchDb": 4.5,
+      "vibrato": {
+        "cents": 8,
+        "hz": 5.6,
+        "delay": 0.28,
+        "minDur": 0.55
+      }
+    },
+    "sitar": {
+      "bank": "gu",
+      "mono": true,
+      "preset": [
+        0,
+        0,
+        104
+      ],
+      "volume": 100,
+      "pan": 46,
+      "bendRange": 12,
+      "kanCents": 200,
+      "phraseArchDb": 1.5
+    },
+    "bass": {
+      "bank": "ms",
+      "mono": true,
+      "preset": [
+        0,
+        0,
+        33
+      ],
+      "volume": 104,
+      "pan": 64,
+      "bendRange": 2,
+      "meend": false,
+      "phraseArchDb": 0
+    },
+    "strings": {
+      "bank": "gu",
+      "preset": [
+        0,
+        0,
+        49
+      ],
+      "melodic": [
+        0,
+        0,
+        48
+      ],
+      "byStyle": {
+        "tremolo": [
+          0,
+          0,
+          44
+        ],
+        "pizz": [
+          0,
+          0,
+          45,
+          "ms"
+        ]
+      },
+      "volume": 100,
+      "pan": 64,
+      "legatoTail": 0.14
+    },
+    "piano": {
+      "bank": "ms",
+      "preset": [
+        0,
+        0,
+        0
+      ],
+      "volume": 96,
+      "pan": 58,
+      "pedal": true,
+      "legatoTail": 0.02,
+      "expression": false
+    },
+    "santoor": {
+      "bank": "gu",
+      "preset": [
+        0,
+        0,
+        15
+      ],
+      "volume": 100,
+      "pan": 44,
+      "legatoTail": 0,
+      "ring": 0.5,
+      "expression": false
+    },
+    "harp": {
+      "bank": "gu",
+      "preset": [
+        0,
+        0,
+        46
+      ],
+      "volume": 100,
+      "pan": 84,
+      "legatoTail": 0.3,
+      "ring": 1.6,
+      "expression": false
+    },
+    "bells": {
+      "bank": "ms",
+      "preset": [
+        0,
+        0,
+        8
+      ],
+      "byStyle": {
+        "glock": [
+          0,
+          0,
+          9
+        ],
+        "music ?box": [
+          0,
+          0,
+          10
+        ],
+        "tubular|temple": [
+          0,
+          0,
+          14,
+          "gu"
+        ],
+        "tinkle|tinker": [
+          0,
+          0,
+          112,
+          "gu"
+        ]
+      },
+      "volume": 90,
+      "pan": 72,
+      "legatoTail": 1.2,
+      "expression": false
+    },
+    "hand_percussion": {
+      "bank": "gu",
+      "kit": [
+        0,
+        0,
+        0
+      ],
+      "volume": 90,
+      "notes": {
+        "shaker": 82,
+        "tambourine": 54,
+        "finger_cymbals": 81,
+        "bell_tree": 84,
+        "wind_chimes": 84
+      }
+    }
+  },
+  "tabla": {
+    "folder": "sounds/tabla",
+    "level": 0.5,
+    "targetRms": 0.1,
+    "velCurve": 1,
+    "dayanSa": 61.22,
+    "bayanPitch": 42.3,
+    "strokes": {
+      "Ge": {
+        "files": [
+          {
+            "file": "tabla_ghe5.flac",
+            "pitch": 42.3
+          },
+          {
+            "file": "tabla_ghe6.flac",
+            "pitch": 42.2
+          },
+          {
+            "file": "tabla_ghe2.flac",
+            "pitch": 41.8
+          },
+          {
+            "file": "tabla_ghe3.flac",
+            "pitch": 41.75
+          },
+          {
+            "file": "tabla_ghe7.flac",
+            "pitch": 43
+          }
+        ],
+        "samFiles": [
+          {
+            "file": "tabla_ghe4.flac",
+            "pitch": 44
+          }
+        ],
+        "drum": "bayan",
+        "gainDb": -1,
+        "maxLen": 1.6,
+        "chokeFade": 0.05,
+        "pan": -0.12
+      },
+      "Ke": {
+        "files": [
+          "tabla_ke1.flac",
+          "tabla_ke2.flac",
+          "tabla_ke3.flac"
+        ],
+        "drum": "bayan",
+        "pitched": false,
+        "damps": true,
+        "gainDb": -7,
+        "pan": -0.12
+      },
+      "Na": {
+        "files": [
+          "tabla_na.flac",
+          "tabla_na_o.flac",
+          "tabla_na.flac",
+          "tabla_na_s.flac"
+        ],
+        "drum": "dayan",
+        "gainDb": 0,
+        "maxLen": 0.9,
+        "pan": 0.1
+      },
+      "Tin": {
+        "files": [
+          "tabla_tas2.flac",
+          "tabla_tas3.flac"
+        ],
+        "drum": "dayan",
+        "gainDb": 2,
+        "maxLen": 1.2,
+        "pan": 0.1
+      },
+      "Tun": {
+        "files": [
+          "tabla_tun1.flac",
+          "tabla_tun2.flac",
+          "tabla_tun3.flac"
+        ],
+        "drum": "dayan",
+        "gainDb": -2,
+        "maxLen": 1.5,
+        "pan": 0.1
+      },
+      "Te": {
+        "files": [
+          "tabla_te1.flac",
+          "tabla_te_m.flac"
+        ],
+        "drum": "dayan",
+        "damps": true,
+        "gainDb": -3,
+        "pan": 0.1
+      },
+      "Ti": {
+        "files": [
+          "tabla_te2.flac",
+          "tabla_te1.flac"
+        ],
+        "drum": "dayan",
+        "damps": true,
+        "gainDb": -3,
+        "pan": 0.1
+      },
+      "Re": {
+        "files": [
+          "tabla_re.flac"
+        ],
+        "drum": "dayan",
+        "damps": true,
+        "gainDb": -1,
+        "pan": 0.1
+      },
+      "Dhet": {
+        "files": [
+          "tabla_dhec.flac"
+        ],
+        "drum": "bayan",
+        "pitched": false,
+        "damps": true,
+        "gainDb": -4,
+        "pan": 0
+      }
+    },
+    "combos": {
+      "Dha": [
+        "Ge",
+        "Na"
+      ],
+      "Dhin": [
+        "Ge",
+        "Tin"
+      ],
+      "Dhi": [
+        "Ge",
+        "Tin"
+      ],
+      "Dhit": [
+        "Ge",
+        "Te"
+      ]
+    },
+    "aliases": {
+      "Ta": "Na",
+      "Ka": "Ke",
+      "Kat": "Ke",
+      "Ki": "Ke",
+      "Ga": "Ge",
+      "Ghe": "Ge",
+      "Gi": "Ge",
+      "Tit": "Te",
+      "Di": "Tin",
+      "Tu": "Tun",
+      "Dhe": "Dhet"
+    },
+    "samEvery": 2
+  },
+  "handPercussionSamples": {
+    "folder": "sounds/vcsl",
+    "level": 0.5,
+    "targetRms": 0.1,
+    "instruments": {
+      "shaker": {
+        "strokes": {
+          "down": [
+            "Shaker_Small/Mid_ShakerDouble_Down_rr1.wav",
+            "Shaker_Small/Mid_ShakerDouble_Down_rr2.wav"
+          ],
+          "up": [
+            "Shaker_Small/Mid_ShakerDouble_Up_rr1.wav",
+            "Shaker_Small/Mid_ShakerDouble_Up_rr2.wav"
+          ],
+          "hit": [
+            "Shaker_Small/Mid_ShakerDouble_Down_rr1.wav"
+          ]
+        },
+        "alternate": [
+          "down",
+          "up"
+        ],
+        "unaccented": 0.62,
+        "gainDb": -2,
+        "pan": 0.35
+      },
+      "tambourine": {
+        "strokes": {
+          "hit": [
+            "Tambourine_1/Tamb1_Hit_v1_rr1_Mid.wav"
+          ],
+          "accent": [
+            "Tambourine_1/Tamb1_Hit_v2_rr1_Mid.wav"
+          ],
+          "long": [
+            "Tambourine_1/Tamb1_Shake_rr1_Mid.wav",
+            "Tambourine_1/Tamb1_Shake_rr2_Mid.wav"
+          ]
+        },
+        "longFrom": 2,
+        "gainDb": -4,
+        "pan": -0.35
+      },
+      "finger_cymbals": {
+        "strokes": {
+          "hit": [
+            "Finger_Cymbals/Fing_Cymb.wav"
+          ]
+        },
+        "highpass": 250,
+        "unaccented": 0.8,
+        "gainDb": -2,
+        "pan": 0.25
+      },
+      "bell_tree": {
+        "strokes": {
+          "hit": [
+            "Bell_Tree_Stroke/BellTree_Stroke_3_Mid.wav"
+          ],
+          "long": [
+            "Bell_Tree_Stroke/BellTree_Stroke_1_Mid.wav"
+          ]
+        },
+        "longFrom": 1.5,
+        "normalize": "body",
+        "unaccented": 0.85,
+        "gainDb": -2,
+        "pan": 0.45
+      },
+      "wind_chimes": {
+        "strokes": {
+          "hit": [
+            "Mark_Trees_Legacy/windchimes_asc1.wav",
+            "Mark_Trees_Legacy/windchimes_desc1.wav"
+          ],
+          "long": [
+            "Mark_Trees_Legacy/windchimes_slowAsc1.wav",
+            "Mark_Trees_Legacy/windchimes_slowDesc1.wav"
+          ]
+        },
+        "longFrom": 3,
+        "normalize": "body",
+        "unaccented": 0.85,
+        "gainDb": -3,
+        "pan": -0.45
+      }
+    },
+    "aliases": {
+      "triangle": "finger_cymbals",
+      "manjira": "finger_cymbals",
+      "chimes": "wind_chimes",
+      "mark_tree": "wind_chimes"
+    }
+  },
+  "swarmandal": {
+    "folder": "sounds/swarmandal",
+    "recordedSa": 1,
+    "tuningCents": 0,
+    "level": 0.4,
+    "targetRms": 0.1,
+    "longFrom": 0.9,
+    "minNotes": 5,
+    "harpUnderVel": 0.72,
+    "pan": -0.3,
+    "maxLen": 6,
+    "kinds": {
+      "up_short": [
+        {
+          "file": "415443__luckylittleraven__Harp_Up_Run_2.ogg",
+          "peak": 0.51,
+          "maxLen": 4
+        }
+      ],
+      "up_long": [
+        {
+          "file": "415438__luckylittleraven__Harp_Up_Run_1.ogg",
+          "peak": 1.6,
+          "maxLen": 4.5
+        }
+      ],
+      "down_short": [
+        {
+          "file": "415447__luckylittleraven__Harp_Wild_Run_Down_short.ogg",
+          "maxLen": 2.9
+        }
+      ],
+      "down_long": [
+        {
+          "file": "415445__luckylittleraven__Harp_Wild_Run_Down_1.ogg",
+          "maxLen": 4.5
+        }
+      ],
+      "strum": [
+        {
+          "file": "415437__luckylittleraven__Harp_Chord_Strikes.ogg",
+          "from": 0.2,
+          "to": 7.6
+        },
+        {
+          "file": "415437__luckylittleraven__Harp_Chord_Strikes.ogg",
+          "from": 7.65,
+          "to": 11.9
+        },
+        {
+          "file": "415437__luckylittleraven__Harp_Chord_Strikes.ogg",
+          "from": 16.55,
+          "to": 19.5
+        },
+        {
+          "file": "415437__luckylittleraven__Harp_Chord_Strikes.ogg",
+          "from": 11.9,
+          "to": 16.5
+        }
+      ]
+    }
+  },
+  "santoorRolls": {
+    "folder": "sounds/santoor",
+    "level": 0.35,
+    "targetRms": 0.1,
+    "pan": -0.2,
+    "release": 0.7,
+    "skip": 0.1,
+    "maxStrokeBeats": 0.25,
+    "minStrokes": 4,
+    "notes": [
+      {
+        "file": "10676__batchku__sant-roll-A#3.ogg",
+        "midi": 58,
+        "offsetCents": -2
+      },
+      {
+        "file": "10669__batchku__sant-roll-C4.ogg",
+        "midi": 60,
+        "offsetCents": 5
+      },
+      {
+        "file": "10666__batchku__sant-roll-D4.ogg",
+        "midi": 62,
+        "offsetCents": -8
+      },
+      {
+        "file": "10670__batchku__sant-roll-D#4.ogg",
+        "midi": 63,
+        "offsetCents": -1
+      },
+      {
+        "file": "10672__batchku__sant-roll-F4.ogg",
+        "midi": 65,
+        "offsetCents": -7
+      },
+      {
+        "file": "10674__batchku__sant-roll-G#4.ogg",
+        "midi": 68,
+        "offsetCents": 8
+      },
+      {
+        "file": "10673__batchku__sant-roll-D5.ogg",
+        "midi": 74,
+        "offsetCents": -6
+      },
+      {
+        "file": "10667__batchku__sant-roll-D#5.ogg",
+        "midi": 75,
+        "offsetCents": -15
+      },
+      {
+        "file": "10668__batchku__sant-roll-F5.ogg",
+        "midi": 77,
+        "offsetCents": -28
+      },
+      {
+        "file": "10671__batchku__sant-roll-G5.ogg",
+        "midi": 79,
+        "offsetCents": -58
+      },
+      {
+        "file": "10675__batchku__sant-roll-G#5.ogg",
+        "midi": 80,
+        "offsetCents": -42
+      },
+      {
+        "file": "10677__batchku__sant-roll-A#5.ogg",
+        "midi": 82,
+        "offsetCents": -13
+      }
+    ]
+  },
+  "mix": {
+    "bansuri": {
+      "gain": 0,
+      "send": -9,
+      "eq": [
+        [
+          3200,
+          1.5,
+          0.8
+        ]
+      ]
+    },
+    "violin": {
+      "gain": -0.5,
+      "send": -9,
+      "eq": [
+        [
+          2600,
+          -1.5,
+          1
+        ]
+      ]
+    },
+    "sitar": {
+      "gain": -2,
+      "send": -11
+    },
+    "bass": {
+      "gain": -5,
+      "send": -60,
+      "highpass": 32
+    },
+    "strings": {
+      "gain": -5.5,
+      "send": -7,
+      "highpass": 55
+    },
+    "piano": {
+      "gain": -3,
+      "send": -11
+    },
+    "santoor": {
+      "gain": 4,
+      "send": -10
+    },
+    "harp": {
+      "gain": -1,
+      "send": -8
+    },
+    "swarmandal": {
+      "gain": 4,
+      "send": -9,
+      "highpass": 120
+    },
+    "bells": {
+      "gain": 0,
+      "send": -7
+    },
+    "tabla": {
+      "gain": 10,
+      "send": -17,
+      "comp": {
+        "belowPeakDb": 10,
+        "ratio": 3,
+        "attackMs": 3,
+        "releaseMs": 80
+      },
+      "limit": {
+        "belowPeakDb": 7
+      }
+    },
+    "hand_percussion": {
+      "gain": 3,
+      "send": -14
+    }
+  },
+  "reverb": {
+    "decaySec": 2.4,
+    "hfDamping": 0.18,
+    "preDelayMs": 26,
+    "inputHighpassHz": 170
+  },
+  "master": {
+    "targetLufs": -16,
+    "ceilingDb": -2,
+    "highpassHz": 28,
+    "presenceDb": 1,
+    "presenceHz": 3500,
+    "lowShelfDb": -1,
+    "lowShelfHz": 90,
+    "fadeInSec": 0.05,
+    "fadeOutStart": 58,
+    "silenceFrom": 59.2,
+    "followScoreDynamics": 0.5,
+    "rideFloorDb": -6
+  }
+}

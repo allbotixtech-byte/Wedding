@@ -2,3 +2,6 @@ node_modules/
 dist/
 output/qa/
 render/ffmpeg2pass*
+
+# instrument SoundFonts and recordings for the soundtrack (downloaded by tools/music/fetch-sounds.mjs)
+tools/music/sounds/

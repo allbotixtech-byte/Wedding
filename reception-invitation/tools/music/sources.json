@@ -1,0 +1,456 @@
+{
+  "note": "Every recording and SoundFont the soundtrack renderer uses. \"node tools/music/fetch-sounds.mjs\" downloads them into tools/music/sounds/ (not committed) and checks each SHA-256.",
+  "files": [
+    {
+      "file": "soundfonts/GeneralUser-GS.sf2",
+      "url": "https://api.github.com/repos/mrbumpy409/GeneralUser-GS/git/blobs/298b552d2e9d1307e03e5c5c99d2c046aaed9ec3",
+      "headers": {
+        "Accept": "application/vnd.github.raw"
+      },
+      "bytes": 32319396,
+      "sha256": "9575028c7a1f589f5770fccc8cff2734566af40cd26ed836944e9a5152688cfe",
+      "licence": "GeneralUser GS License v2.0 (free use for music creation, private or commercial)",
+      "credit": "GeneralUser GS v2.0.3 by S. Christian Collins"
+    },
+    {
+      "file": "soundfonts/MuseScore_General.sf3",
+      "url": "https://ftp.osuosl.org/pub/musescore/soundfont/MuseScore_General/MuseScore_General.sf3",
+      "bytes": 39900972,
+      "sha256": "5b85b6c2c61d10b2b91cddd41efcce7b25cd31c8271d511c73afafbef20b6fa3",
+      "licence": "MIT",
+      "credit": "MuseScore_General v0.2 (FluidR3 by Frank Wen; FluidR3Mono by Michael Cowgill; adaptation by S. Christian Collins)"
+    },
+    {
+      "file": "tabla/tabla_ghe2.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_ghe2.flac",
+      "bytes": 77513,
+      "sha256": "02fbfe4919aa6bb7540a69e9b233e8238447182922efd7c78fbf38075bf89f28",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_ghe3.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_ghe3.flac",
+      "bytes": 68797,
+      "sha256": "53d300a9fbcdeb50a093323a78219ae8b43fb690aa1a149117be02211d6ad3fd",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_ghe4.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_ghe4.flac",
+      "bytes": 24456,
+      "sha256": "297cb521f94e69694987405a6409e7ce0bc6270e464e6f453580a4ededa56f61",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_ghe5.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_ghe5.flac",
+      "bytes": 90408,
+      "sha256": "c3d0b869afa1b2aa5789532e8165097643fcd589fbe2831d15625255ee4da602",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_ghe6.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_ghe6.flac",
+      "bytes": 105533,
+      "sha256": "67e22f8777e0a9884f2492556c72c64172bf69775dd7b76a97a7a8fd31074592",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_ghe7.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_ghe7.flac",
+      "bytes": 62033,
+      "sha256": "d9eb69040c81347aca84abdb311c1dda0e36dc57457e981493fa057942bfa3d9",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_ke1.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_ke1.flac",
+      "bytes": 2686,
+      "sha256": "1d6742207c77d6bba5a1ef83cf9642f056fac79384612abad669ec0c18c91b3b",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_ke2.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_ke2.flac",
+      "bytes": 2782,
+      "sha256": "0fcbede2a4c19a136f20820cfb6ab9d13a112fc55e54f0653a551e9e65dfcca4",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_ke3.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_ke3.flac",
+      "bytes": 3341,
+      "sha256": "bd6b009e2759a38cea185deac3f47e7f870940256550afe4f0bb849133b7f5a0",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_na.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_na.flac",
+      "bytes": 18123,
+      "sha256": "2cf51e38f5173d582d751c4333e5b658f02c01944a5b0d648ef83949edc92563",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_na_o.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_na_o.flac",
+      "bytes": 41211,
+      "sha256": "9be7446e4b754d9244df6ec558f27cb4199584b560ae1b10e1cd713b95512677",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_na_s.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_na_s.flac",
+      "bytes": 8164,
+      "sha256": "3806d33a71a388d0d087c2768c136b0104c4ac495c55e8f65e2de7d240964063",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_tas2.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_tas2.flac",
+      "bytes": 35586,
+      "sha256": "ef40d32d60bb9759604de2b636014fa030242047073ebca5e887e7e160c685ff",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_tas3.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_tas3.flac",
+      "bytes": 35045,
+      "sha256": "a08af469a983cb7300ea1bbe848732f3dbd44e9a3a26e993aefb7070dd860e2c",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_tun1.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_tun1.flac",
+      "bytes": 55873,
+      "sha256": "b86e20c4654a07c01524547b75600a73c19cb1ce826f5709e4f348e752246651",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_tun2.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_tun2.flac",
+      "bytes": 67653,
+      "sha256": "7e86486ff31691db9d2884c81882956928b467057509fc86221412e167e1c801",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_tun3.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_tun3.flac",
+      "bytes": 52065,
+      "sha256": "595aed5ce92e8ba5f07ea6c1c31dda321eec3e11a749d73e78af16d68e4592c0",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_te1.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_te1.flac",
+      "bytes": 5955,
+      "sha256": "276b07272060183dd8b5054b14b7bcd56328dd20a7b9a2c738a6f780c0635dd0",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_te2.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_te2.flac",
+      "bytes": 9670,
+      "sha256": "24f48d727d4c74cdd8c10ece1b7f24f00f5b063828a698fe1234b50ac8b08591",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_te_m.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_te_m.flac",
+      "bytes": 7390,
+      "sha256": "9a7d5e62650f765121b373cfdda7b914212af567057d8b2fbc96126ce1a21769",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_re.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_re.flac",
+      "bytes": 8512,
+      "sha256": "02ebe246c1923fb790437ace7f67154e669b2373fe56a19413f34b416ecede58",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "tabla/tabla_dhec.flac",
+      "url": "https://cdn.jsdelivr.net/gh/sonic-pi-net/sonic-pi@dev/etc/samples/tabla_dhec.flac",
+      "bytes": 10228,
+      "sha256": "f5d5a59a674cc9b371ca6f5d10c807dbd74354064602aa7be385ce26f700e7b2",
+      "licence": "CC0 1.0",
+      "credit": "Sonic Pi sample set: tabla strokes originally recorded by dio_333 on freesound.org"
+    },
+    {
+      "file": "vcsl/Shaker_Small/Mid_ShakerDouble_Down_rr1.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Shaker%2C%20Small/Mid_ShakerDouble_Down_rr1.wav",
+      "bytes": 46844,
+      "sha256": "0df7c271e1dba4de7304f7df81886390dd9ae698bfdd6df570026af4f2223574",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "vcsl/Shaker_Small/Mid_ShakerDouble_Down_rr2.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Shaker%2C%20Small/Mid_ShakerDouble_Down_rr2.wav",
+      "bytes": 46652,
+      "sha256": "1bf11b6a055ace8b6fbe2c158f7bea449c91e4d72f97b9464b4856184aaf186d",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "vcsl/Shaker_Small/Mid_ShakerDouble_Up_rr1.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Shaker%2C%20Small/Mid_ShakerDouble_Up_rr1.wav",
+      "bytes": 22352,
+      "sha256": "69a10776db0b838bc6555be2dbdb41e1521bb28bba2e89963d1bf779bfb5b61f",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "vcsl/Shaker_Small/Mid_ShakerDouble_Up_rr2.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Shaker%2C%20Small/Mid_ShakerDouble_Up_rr2.wav",
+      "bytes": 29168,
+      "sha256": "661f7591bf5fc77d8b69c61bd52425af20d0f5692bdd2f68c74a684c5f02d26d",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "vcsl/Tambourine_1/Tamb1_Hit_v1_rr1_Mid.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Tambourine%201/Tamb1_Hit_v1_rr1_Mid.wav",
+      "bytes": 338496,
+      "sha256": "6fd5af9ec2d94c3b66fa871aecbc2e2844eea155a668fd0f15f07d59ae67dd40",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "vcsl/Tambourine_1/Tamb1_Hit_v2_rr1_Mid.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Tambourine%201/Tamb1_Hit_v2_rr1_Mid.wav",
+      "bytes": 293256,
+      "sha256": "885ebf1d70f8e888f576682e4e4112b92b69649162f392c83b3379c91a09cf41",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "vcsl/Tambourine_1/Tamb1_Shake_rr1_Mid.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Tambourine%201/Tamb1_Shake_rr1_Mid.wav",
+      "bytes": 258948,
+      "sha256": "5876b66d1e8009b3ee884ff3bf52fbc420b44f9ddffffe830b4074d3dfc09924",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "vcsl/Tambourine_1/Tamb1_Shake_rr2_Mid.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Tambourine%201/Tamb1_Shake_rr2_Mid.wav",
+      "bytes": 237792,
+      "sha256": "5ab51f8cd9fba10ae7a7125b96a520c69e049687409532b745fddd5356c6d6f3",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "vcsl/Finger_Cymbals/Fing_Cymb.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Finger%20Cymbals/Fing_Cymb.wav",
+      "bytes": 1678354,
+      "sha256": "6d39abaeff2a09fc8dcd366664ebad47f570c95b0e0440fde1bb6b7dbd33be32",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "vcsl/Bell_Tree_Stroke/BellTree_Stroke_1_Mid.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Bell%20Tree/Stroke/BellTree_Stroke_1_Mid.wav",
+      "bytes": 805132,
+      "sha256": "aae960ec30aaf8217ca6421d540adefd43012ddb12275be3022818f3a0478cdf",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "vcsl/Bell_Tree_Stroke/BellTree_Stroke_3_Mid.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Bell%20Tree/Stroke/BellTree_Stroke_3_Mid.wav",
+      "bytes": 997272,
+      "sha256": "a9504525ecc659dee61eec54c3ce0d73ed50df32da3659b62df680d2a6a57958",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "vcsl/Mark_Trees_Legacy/windchimes_asc1.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Mark%20Trees/Legacy/windchimes_asc1.wav",
+      "bytes": 2054074,
+      "sha256": "4da1f0ec4ed2d94902a35995faef9ce2bd747a525761c0db7ace093359939693",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "vcsl/Mark_Trees_Legacy/windchimes_desc1.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Mark%20Trees/Legacy/windchimes_desc1.wav",
+      "bytes": 2612842,
+      "sha256": "171d34ccb881e5ece4728faae4e5f25fb8aa30831180457a1dce74e7fbf00c1a",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "vcsl/Mark_Trees_Legacy/windchimes_slowAsc1.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Mark%20Trees/Legacy/windchimes_slowAsc1.wav",
+      "bytes": 2969842,
+      "sha256": "fa77f1895212121f0b864bded3fb3503b09bf9eb05de11406608dbd1a2402dfd",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "vcsl/Mark_Trees_Legacy/windchimes_slowDesc1.wav",
+      "url": "https://cdn.jsdelivr.net/gh/sgossner/VCSL@master/Idiophones/Struck%20Idiophones/Mark%20Trees/Legacy/windchimes_slowDesc1.wav",
+      "bytes": 2840494,
+      "sha256": "cedadce44c8f82edf0f6fb145a2b9bcdda03912fe95981b4c17d82a40a23db4a",
+      "licence": "CC0 1.0",
+      "credit": "Versilian Community Sample Library (VCSL) by Versilian Studios"
+    },
+    {
+      "file": "swarmandal/415437__luckylittleraven__Harp_Chord_Strikes.ogg",
+      "url": "https://cdn.freesound.org/previews/415/415437_2112203-hq.ogg",
+      "bytes": 699024,
+      "sha256": "47fa91f9765b111aa65c97dfd4dbc7eb57ba053f4008fc7caf1fa774a22811c5",
+      "licence": "CC0 1.0",
+      "credit": "swarmandal recording by luckylittleraven, https://freesound.org/s/415437/"
+    },
+    {
+      "file": "swarmandal/415438__luckylittleraven__Harp_Up_Run_1.ogg",
+      "url": "https://cdn.freesound.org/previews/415/415438_2112203-hq.ogg",
+      "bytes": 150511,
+      "sha256": "871d67696d32a3cddbdf8fe972995ad724eddac844fe0e33f4d9ee90b785b207",
+      "licence": "CC0 1.0",
+      "credit": "swarmandal recording by luckylittleraven, https://freesound.org/s/415438/"
+    },
+    {
+      "file": "swarmandal/415443__luckylittleraven__Harp_Up_Run_2.ogg",
+      "url": "https://cdn.freesound.org/previews/415/415443_2112203-hq.ogg",
+      "bytes": 127712,
+      "sha256": "51f7b4cea3bc1ec975c9d831abb81462ad575b1f38669400befcd1db670264e7",
+      "licence": "CC0 1.0",
+      "credit": "swarmandal recording by luckylittleraven, https://freesound.org/s/415443/"
+    },
+    {
+      "file": "swarmandal/415445__luckylittleraven__Harp_Wild_Run_Down_1.ogg",
+      "url": "https://cdn.freesound.org/previews/415/415445_2112203-hq.ogg",
+      "bytes": 172875,
+      "sha256": "7dda69639c188177337d3f0bb89b1122bed321a48d6f129096d395acbbaf4a05",
+      "licence": "CC0 1.0",
+      "credit": "swarmandal recording by luckylittleraven, https://freesound.org/s/415445/"
+    },
+    {
+      "file": "swarmandal/415447__luckylittleraven__Harp_Wild_Run_Down_short.ogg",
+      "url": "https://cdn.freesound.org/previews/415/415447_2112203-hq.ogg",
+      "bytes": 79498,
+      "sha256": "c2197ba77d361b92728920543e42400c5c835ffa2f7c0b428548735077d96317",
+      "licence": "CC0 1.0",
+      "credit": "swarmandal recording by luckylittleraven, https://freesound.org/s/415447/"
+    },
+    {
+      "file": "santoor/10666__batchku__sant-roll-D4.ogg",
+      "url": "https://cdn.freesound.org/previews/10/10666_186-hq.ogg",
+      "bytes": 288848,
+      "sha256": "4355640600769d0f7822484cae0ed3e774d98c7f00fe76de9e2bbb357e5bbe8b",
+      "licence": "CC0 1.0",
+      "credit": "santoor roll recorded by batchku, https://freesound.org/s/10666/"
+    },
+    {
+      "file": "santoor/10667__batchku__sant-roll-D#5.ogg",
+      "url": "https://cdn.freesound.org/previews/10/10667_186-hq.ogg",
+      "bytes": 298585,
+      "sha256": "4a63e19b30efff26cd2d1baeb78a9957414ba4eea25980fdfeb584a3f896cff3",
+      "licence": "CC0 1.0",
+      "credit": "santoor roll recorded by batchku, https://freesound.org/s/10667/"
+    },
+    {
+      "file": "santoor/10668__batchku__sant-roll-F5.ogg",
+      "url": "https://cdn.freesound.org/previews/10/10668_186-hq.ogg",
+      "bytes": 286880,
+      "sha256": "2a5dd44d034bafd95a036f925b0b36745ac17a475555d84964b652653064c4aa",
+      "licence": "CC0 1.0",
+      "credit": "santoor roll recorded by batchku, https://freesound.org/s/10668/"
+    },
+    {
+      "file": "santoor/10669__batchku__sant-roll-C4.ogg",
+      "url": "https://cdn.freesound.org/previews/10/10669_186-hq.ogg",
+      "bytes": 286941,
+      "sha256": "0c3095eafa80e0d42bfd4bf52c88edaf06a19d8d8736d6fd18ed5ee0c1c014b6",
+      "licence": "CC0 1.0",
+      "credit": "santoor roll recorded by batchku, https://freesound.org/s/10669/"
+    },
+    {
+      "file": "santoor/10670__batchku__sant-roll-D#4.ogg",
+      "url": "https://cdn.freesound.org/previews/10/10670_186-hq.ogg",
+      "bytes": 312588,
+      "sha256": "29f5d27c35be0814711d02ed3076c36c82fdf44120235810b879b54b46507151",
+      "licence": "CC0 1.0",
+      "credit": "santoor roll recorded by batchku, https://freesound.org/s/10670/"
+    },
+    {
+      "file": "santoor/10671__batchku__sant-roll-G5.ogg",
+      "url": "https://cdn.freesound.org/previews/10/10671_186-hq.ogg",
+      "bytes": 280248,
+      "sha256": "959c65816e72b79b6dee42a83fae3deec6655089c799b78e417bc6d0d881c6fe",
+      "licence": "CC0 1.0",
+      "credit": "santoor roll recorded by batchku, https://freesound.org/s/10671/"
+    },
+    {
+      "file": "santoor/10672__batchku__sant-roll-F4.ogg",
+      "url": "https://cdn.freesound.org/previews/10/10672_186-hq.ogg",
+      "bytes": 332190,
+      "sha256": "2644efd51231129442aa6b41b0fdf1209d946d2fbbd4491bc91c026544de3e5c",
+      "licence": "CC0 1.0",
+      "credit": "santoor roll recorded by batchku, https://freesound.org/s/10672/"
+    },
+    {
+      "file": "santoor/10673__batchku__sant-roll-D5.ogg",
+      "url": "https://cdn.freesound.org/previews/10/10673_186-hq.ogg",
+      "bytes": 326620,
+      "sha256": "1d87cff9ba2e99b0192597cb6bcb609d8eb7b682fcdae7306d62f71ca372d7fe",
+      "licence": "CC0 1.0",
+      "credit": "santoor roll recorded by batchku, https://freesound.org/s/10673/"
+    },
+    {
+      "file": "santoor/10674__batchku__sant-roll-G#4.ogg",
+      "url": "https://cdn.freesound.org/previews/10/10674_186-hq.ogg",
+      "bytes": 302008,
+      "sha256": "fdadac8d2fee88819d2056ef0fc8f737f505166e54b3638f9d5ac9a04144fe2c",
+      "licence": "CC0 1.0",
+      "credit": "santoor roll recorded by batchku, https://freesound.org/s/10674/"
+    },
+    {
+      "file": "santoor/10675__batchku__sant-roll-G#5.ogg",
+      "url": "https://cdn.freesound.org/previews/10/10675_186-hq.ogg",
+      "bytes": 268449,
+      "sha256": "14e4d50f034a550011e91ecfa07eda9ec8fff737fff3e8ec33897b809c2afcdb",
+      "licence": "CC0 1.0",
+      "credit": "santoor roll recorded by batchku, https://freesound.org/s/10675/"
+    },
+    {
+      "file": "santoor/10676__batchku__sant-roll-A#3.ogg",
+      "url": "https://cdn.freesound.org/previews/10/10676_186-hq.ogg",
+      "bytes": 293235,
+      "sha256": "66ae75a58364dfb5f01f8c32391a716b69a4a8241de333c5fd865c2eff6961e3",
+      "licence": "CC0 1.0",
+      "credit": "santoor roll recorded by batchku, https://freesound.org/s/10676/"
+    },
+    {
+      "file": "santoor/10677__batchku__sant-roll-A#5.ogg",
+      "url": "https://cdn.freesound.org/previews/10/10677_186-hq.ogg",
+      "bytes": 285685,
+      "sha256": "36382c1bca21e005e819af71debd3adeedaf44adc408d67c7494cbc607ffa6a9",
+      "licence": "CC0 1.0",
+      "credit": "santoor roll recorded by batchku, https://freesound.org/s/10677/"
+    }
+  ]
+}
