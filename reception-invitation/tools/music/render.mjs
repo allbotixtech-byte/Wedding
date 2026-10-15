@@ -113,9 +113,10 @@ function monoLine(partName, P, evs) {
       else if ((e.first || (e.meend && !contiguous)) && P.scoop) env = (dt) => -P.scoop * (1 - smooth(dt / 0.11));
       ops[ch].push({ t: e.t - 0.0005, kind: 'set', value: 0, env });
       const vel = velOf(e, P);
-      ev(events, e.t, (s) => each(ch, (c) => s.noteOn(c, m, vel)));
+      const voices = e.midis;   // usually one note; parallel octaves of a string melody bend together
+      ev(events, e.t, (s) => each(ch, (c) => voices.forEach((v) => s.noteOn(c, v, vel))));
       const off = { t: e.t + e.dur + (next && legato(e) && next.t - (e.t + e.dur) < 0.03 ? 0.03 : -Math.min(0.04, e.dur * 0.08)) };
-      events.push({ get pos() { return posOf(off.t); }, order: order++, fn: (s) => each(ch, (c) => s.noteOff(c, m)) });
+      events.push({ get pos() { return posOf(off.t); }, order: order++, fn: (s) => each(ch, (c) => voices.forEach((v) => s.noteOff(c, v))) });
       chain = { ch, base: m, off };
     }
     if (P.vibrato && e.dur >= (P.vibrato.minDur ?? 0.55)) vib[chain.ch].push({ t0: e.t, t1: e.t + e.dur, cents: P.vibrato.cents, hz: P.vibrato.hz, delay: P.vibrato.delay });
@@ -167,9 +168,10 @@ function lineIsMelodic(lineEvs) {
   const durs = lineEvs.map((e) => e.dur).sort((a, b) => a - b), median = durs[Math.floor(durs.length / 2)] ?? 0;
   return lineEvs.length >= 3 && single / lineEvs.length >= 0.7 && median <= 1.5 * 0.75;
 }
-/** Time of the first harmony change (a different chord) after t, or null. */
+/** Time of the first harmony change (a different chord) at or after t, or null. A note that ends exactly on a
+ *  change belongs to the chord before it, so it is damped at that change rather than at the following one. */
 function nextChordChange(t) {
-  const i = harmony.findIndex((h) => h.t0 <= t + 1e-6 && t < h.t1 - 1e-6); if (i < 0) return null;
+  const u = t - 1e-3, i = harmony.findIndex((h) => h.t0 <= u && u < h.t1); if (i < 0) return null;
   for (let k = i + 1; k < harmony.length; k++) if (harmony[k].chord !== harmony[i].chord) return harmony[k].t0;
   return null;
 }
@@ -301,6 +303,7 @@ for (const [part, evs0] of Object.entries(notes)) {
   let evs = evs0;
   if (part === 'santoor' && CONFIG.santoorRolls) {
     const { keep, groups } = splitSantoorRolls(evs, CONFIG.santoorRolls);
+    groups.forEach((g) => { g.damp = nextChordChange(g.t1); });
     if (groups.length) { const r = renderSantoorRolls(CONFIG.santoorRolls, groups, { N, sr: SR }); addStem('santoor', r); log.push(`santoor rolls: ${r.used.join(' · ')}`); }
     evs = keep;
   }
@@ -313,6 +316,21 @@ for (const [part, evs0] of Object.entries(notes)) {
     }
   }
   if (!evs.length) continue;
+  if (!P.mono && P.portamento) {   // tune lines that ask for portamento glide into their long notes, like a Hindi film string section
+    const re = new RegExp(P.portamento.styleRegex ?? 'portamento|slide', 'i'), byLine = new Map();
+    for (const e of evs) { if (!byLine.has(e.line)) byLine.set(e.line, []); byLine.get(e.line).push(e); }
+    const portLines = [...byLine.values()].filter((list) => re.test(list[0].style) && lineIsMelodic(list));
+    for (const list of portLines) {
+      list.forEach((e, k) => { const p = list[k - 1]; if (p && e.dur >= (P.portamento.minDur ?? 0.45) && Math.abs(e.midis[0] - p.midis[0]) >= 2 && e.t - (p.t + p.dur) < 0.03) e.meend = true; });
+      const preset = P.melodic ?? P.preset;
+      const PM = { ...P, preset: preset.slice(0, 3), bank: preset[3] ?? P.bank, mono: true, bendRange: 12, scoop: 0, kanCents: 0, vibrato: null, phraseArchDb: P.portamento.archDb ?? 2, layers: [] };
+      for (const [bankId, built] of Object.entries(monoLine(part, PM, list))) addStem(part, await renderSynth(bankId, built.setup, built.events, built.lanes, built.preload));
+      log.push(`${part}: portamento line at ${list[0].t.toFixed(2)} s (${list.filter((e) => e.meend).length} slides)`);
+    }
+    const done = new Set(portLines.flat());
+    evs = evs.filter((e) => !done.has(e));
+    if (!evs.length) continue;
+  }
   const passes = P.mono ? monoLine(part, P, evs) : polyPart(part, P, evs);
   for (const [bankId, built] of Object.entries(passes)) addStem(part, await renderSynth(bankId, built.setup, built.events, built.lanes, built.preload));
 }

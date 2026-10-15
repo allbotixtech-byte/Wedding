@@ -97,8 +97,10 @@ const KEHERWA_LIGHT = [['Dha', 0.85], ['-', 0], ['Na', 0.6], ['-', 0], ['Ge', 0.
 /** one tabla entry → [{ t, stroke, vel(0..1) }] */
 export function tablaStrokes(entry, meter) {
   const bar = Number(entry.bar), t0 = BAR_SEC * bar, lvl = Number(entry.level ?? 0.6);
+  // optional "cresc": [from, to] scales the strokes across the bar (e.g. a tihai growing into sam)
+  const [c0, c1] = Array.isArray(entry.cresc) ? entry.cresc.map(Number) : [1, 1];
   const out = [];
-  const push = (t, stroke, v) => { if (stroke !== '-' && v > 0) out.push({ t, stroke, vel: v * lvl }); };
+  const push = (t, stroke, v) => { const c = c0 + (c1 - c0) * Math.min(1, Math.max(0, (t - t0) / BAR_SEC)); if (stroke !== '-' && v > 0) out.push({ t, stroke, vel: v * lvl * c }); };
   if (entry.strokes && String(entry.strokes).trim()) {   // explicit strokes win
     let t = t0 + BEAT_SEC * frac(entry.beat ?? 0);
     for (const raw of String(entry.strokes).trim().split(/\s+/)) {

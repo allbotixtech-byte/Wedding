@@ -1,0 +1,1481 @@
+{
+ "title": "Saanjh Ki Dor (The Twilight Thread)",
+ "concept": "His phrase and her phrase become their song. The mukhda is a two-part tune in D: a rising call (Pa-Sa-Re-Ga, a small dip, then a meend leap that lands on the anticipated last eighth of beat 3, where the names appear) and a falling answer. The bansuri gives the call to the groom and the violin gives the answer to the bride; when the couple appears the two halves meet, then rise together in parallel thirds. At the stage reveal the call climbs one step higher onto komal ni (C6 over a bVII chord) with sweeping octave strings, and the resolution is coloured by Charukeshi komal dha (Bb). The card carries the call at half speed over the relative-minor harmony. The finale brings back call and resolution, cadences bVI-bVII-I and rests on D6/9, the swaras of Bhupali, with a swarmandal glissando.",
+ "meter": "12/8",
+ "key": "D major (Sa = D), Khamaj / Charukeshi colours",
+ "mode_notes": "Sa = D. Base scale D E F# G A B C# (shuddha). Khamaj colour: C natural (komal ni) in descents and on the bVII chord: the stage peak C6 and the Cadd9 lifts (bars 6, 10, 18). Charukeshi colour: Bb (komal dha) against shuddha Ga: Gm6 (bars 6, 16), Gm(add9)/Bb (bar 12), Bb(add9) (bar 18), and the meends B5->Bb5 (violin, bar 6) and A5->Bb5 (bansuri, bar 16). Minor side of the blend: the call at half speed over Bm7 (bar 13), Em7 / F#m7 colours. Ornaments: ~ meend, ^ kan, short murki F#-E before Sa. Final chord D6/9 = Sa Re Ga Pa Dha (Bhupali); the harp glissandi use the same pentatonic.",
+ "harmony": [
+  {
+   "bar": 0,
+   "beat": "0",
+   "chord": "Dadd9",
+   "bass": "D2",
+   "voicing": "D3+A3+E4+F#4"
+  },
+  {
+   "bar": 1,
+   "beat": "0",
+   "chord": "Dadd9",
+   "bass": "D2",
+   "voicing": "D3+A3+E4+F#4"
+  },
+  {
+   "bar": 1,
+   "beat": "2",
+   "chord": "Bm7",
+   "bass": "B1",
+   "voicing": "B2+F#3+A3+D4"
+  },
+  {
+   "bar": 2,
+   "beat": "0",
+   "chord": "G6",
+   "bass": "G2",
+   "voicing": "G2+D3+B3+E4"
+  },
+  {
+   "bar": 2,
+   "beat": "2",
+   "chord": "Em7",
+   "bass": "E2",
+   "voicing": "E3+G3+B3+D4"
+  },
+  {
+   "bar": 2,
+   "beat": "3",
+   "chord": "A7sus4",
+   "bass": "A1",
+   "voicing": "A2+E3+G3+D4"
+  },
+  {
+   "bar": 3,
+   "beat": "0",
+   "chord": "D",
+   "bass": "D2",
+   "voicing": "D3+A3+D4+F#4"
+  },
+  {
+   "bar": 3,
+   "beat": "2",
+   "chord": "Gadd9/B",
+   "bass": "B1",
+   "voicing": "B2+G3+A3+D4"
+  },
+  {
+   "bar": 4,
+   "beat": "0",
+   "chord": "Em7",
+   "bass": "E2",
+   "voicing": "E3+G3+B3+D4"
+  },
+  {
+   "bar": 4,
+   "beat": "2",
+   "chord": "A7sus4",
+   "bass": "A1",
+   "voicing": "A2+E3+G3+D4"
+  },
+  {
+   "bar": 5,
+   "beat": "0",
+   "chord": "G6",
+   "bass": "G2",
+   "voicing": "G2+D3+B3+E4"
+  },
+  {
+   "bar": 5,
+   "beat": "2",
+   "chord": "A7sus4",
+   "bass": "A1",
+   "voicing": "A2+E3+G3+D4"
+  },
+  {
+   "bar": 5,
+   "beat": "3",
+   "chord": "A7",
+   "bass": "A1",
+   "voicing": "A2+E3+G3+C#4"
+  },
+  {
+   "bar": 6,
+   "beat": "0",
+   "chord": "F#m7",
+   "bass": "F#2",
+   "voicing": "F#3+A3+C#4+E4"
+  },
+  {
+   "bar": 6,
+   "beat": "2",
+   "chord": "Gm6",
+   "bass": "G2",
+   "voicing": "G2+D3+Bb3+E4"
+  },
+  {
+   "bar": 6,
+   "beat": "3",
+   "chord": "Cadd9",
+   "bass": "C2",
+   "voicing": "C3+G3+D4+E4"
+  },
+  {
+   "bar": 7,
+   "beat": "0",
+   "chord": "Dadd9",
+   "bass": "D2",
+   "voicing": "D3+A3+E4+F#4"
+  },
+  {
+   "bar": 7,
+   "beat": "2",
+   "chord": "Bm7",
+   "bass": "B1",
+   "voicing": "B2+F#3+A3+D4"
+  },
+  {
+   "bar": 7,
+   "beat": "3",
+   "chord": "Gadd9",
+   "bass": "G2",
+   "voicing": "G2+D3+B3+A4"
+  },
+  {
+   "bar": 8,
+   "beat": "0",
+   "chord": "Em7",
+   "bass": "E2",
+   "voicing": "E3+G3+B3+D4"
+  },
+  {
+   "bar": 8,
+   "beat": "2",
+   "chord": "A7sus4",
+   "bass": "A1",
+   "voicing": "A2+E3+G3+D4"
+  },
+  {
+   "bar": 8,
+   "beat": "8/3",
+   "chord": "A7",
+   "bass": "A1",
+   "voicing": "A2+E3+G3+C#4"
+  },
+  {
+   "bar": 9,
+   "beat": "0",
+   "chord": "Bm7",
+   "bass": "B1",
+   "voicing": "B2+F#3+A3+D4"
+  },
+  {
+   "bar": 9,
+   "beat": "2",
+   "chord": "G6",
+   "bass": "G2",
+   "voicing": "G2+D3+B3+E4"
+  },
+  {
+   "bar": 9,
+   "beat": "8/3",
+   "chord": "A9sus4",
+   "bass": "A1",
+   "voicing": "A2+E3+G3+B3+D4"
+  },
+  {
+   "bar": 10,
+   "beat": "0",
+   "chord": "Dadd9",
+   "bass": "D2",
+   "voicing": "D3+A3+E4+F#4"
+  },
+  {
+   "bar": 10,
+   "beat": "2",
+   "chord": "Cadd9",
+   "bass": "C2",
+   "voicing": "C3+G3+D4+E4"
+  },
+  {
+   "bar": 11,
+   "beat": "0",
+   "chord": "G6",
+   "bass": "G2",
+   "voicing": "G2+D3+B3+E4"
+  },
+  {
+   "bar": 11,
+   "beat": "2",
+   "chord": "A9sus4",
+   "bass": "A1",
+   "voicing": "A2+E3+G3+B3+D4"
+  },
+  {
+   "bar": 11,
+   "beat": "8/3",
+   "chord": "A7",
+   "bass": "A1",
+   "voicing": "A2+E3+G3+C#4"
+  },
+  {
+   "bar": 12,
+   "beat": "0",
+   "chord": "Gm(add9)/Bb",
+   "bass": "Bb1",
+   "voicing": "Bb2+G3+A3+D4"
+  },
+  {
+   "bar": 12,
+   "beat": "1",
+   "chord": "D/A",
+   "bass": "A1",
+   "voicing": "A2+D3+F#3+A3"
+  },
+  {
+   "bar": 12,
+   "beat": "2",
+   "chord": "A7",
+   "bass": "A1",
+   "voicing": "A2+E3+G3+C#4"
+  },
+  {
+   "bar": 12,
+   "beat": "8/3",
+   "chord": "Dadd9",
+   "bass": "D2",
+   "voicing": "D3+A3+E4+F#4"
+  },
+  {
+   "bar": 13,
+   "beat": "0",
+   "chord": "Bm7",
+   "bass": "B1",
+   "voicing": "B2+F#3+A3+D4"
+  },
+  {
+   "bar": 13,
+   "beat": "8/3",
+   "chord": "Gmaj7",
+   "bass": "G2",
+   "voicing": "G2+D3+B3+F#4"
+  },
+  {
+   "bar": 14,
+   "beat": "0",
+   "chord": "Em7",
+   "bass": "E2",
+   "voicing": "E3+G3+B3+D4"
+  },
+  {
+   "bar": 14,
+   "beat": "2",
+   "chord": "A7sus4",
+   "bass": "A1",
+   "voicing": "A2+E3+G3+D4"
+  },
+  {
+   "bar": 14,
+   "beat": "8/3",
+   "chord": "A",
+   "bass": "A1",
+   "voicing": "A2+E3+A3+C#4"
+  },
+  {
+   "bar": 15,
+   "beat": "0",
+   "chord": "Gadd9",
+   "bass": "G2",
+   "voicing": "G2+D3+B3+A4"
+  },
+  {
+   "bar": 15,
+   "beat": "2",
+   "chord": "F#m7",
+   "bass": "F#2",
+   "voicing": "F#3+A3+C#4+E4"
+  },
+  {
+   "bar": 16,
+   "beat": "0",
+   "chord": "Em7",
+   "bass": "E2",
+   "voicing": "E3+G3+B3+D4"
+  },
+  {
+   "bar": 16,
+   "beat": "2",
+   "chord": "Gm6",
+   "bass": "G2",
+   "voicing": "G2+D3+Bb3+E4"
+  },
+  {
+   "bar": 16,
+   "beat": "8/3",
+   "chord": "A9sus4",
+   "bass": "A1",
+   "voicing": "A2+E3+G3+B3+D4"
+  },
+  {
+   "bar": 17,
+   "beat": "0",
+   "chord": "Dadd9",
+   "bass": "D2",
+   "voicing": "D3+A3+E4+F#4"
+  },
+  {
+   "bar": 17,
+   "beat": "2",
+   "chord": "Bm7",
+   "bass": "B1",
+   "voicing": "B2+F#3+A3+D4"
+  },
+  {
+   "bar": 17,
+   "beat": "3",
+   "chord": "Gmaj9",
+   "bass": "G2",
+   "voicing": "G2+D3+B3+F#4+A4"
+  },
+  {
+   "bar": 18,
+   "beat": "0",
+   "chord": "Gadd9",
+   "bass": "G2",
+   "voicing": "G2+D3+B3+A4"
+  },
+  {
+   "bar": 18,
+   "beat": "1",
+   "chord": "D/A",
+   "bass": "A1",
+   "voicing": "A2+D3+F#3+A3"
+  },
+  {
+   "bar": 18,
+   "beat": "2",
+   "chord": "A7",
+   "bass": "A1",
+   "voicing": "A2+E3+G3+C#4"
+  },
+  {
+   "bar": 18,
+   "beat": "8/3",
+   "chord": "Bb(add9)",
+   "bass": "Bb1",
+   "voicing": "Bb2+F3+C4+D4"
+  },
+  {
+   "bar": 18,
+   "beat": "10/3",
+   "chord": "Cadd9",
+   "bass": "C2",
+   "voicing": "C3+G3+D4+E4"
+  },
+  {
+   "bar": 19,
+   "beat": "0",
+   "chord": "D6/9",
+   "bass": "D2",
+   "voicing": "D2+A2+F#3+B3+E4+A4"
+  }
+ ],
+ "sections": [
+  {
+   "bars": "0",
+   "name": "Alaap - the wax seal",
+   "intent": "Sa-Pa drone, santoor tremolo, bansuri alaap, swarmandal glissando as the seal flies"
+  },
+  {
+   "bars": "1-2",
+   "name": "Twilight garden - anticipation",
+   "intent": "bansuri hints the call but sinks home; sitar answers softly, an octave low; piano 12/8 wave; chimes on the bloom"
+  },
+  {
+   "bars": "3-4",
+   "name": "Groom - the call",
+   "intent": "bansuri states the call, A5 lands with his name (11.0); tabla and bass enter softly"
+  },
+  {
+   "bars": "5-6",
+   "name": "Bride - the answer",
+   "intent": "violin states the answer, B5 blooms with her name (17.0) and sighs to E5; santoor drops; Gm6-C lifts to the couple"
+  },
+  {
+   "bars": "7-9",
+   "name": "Couple - the mukhda arrives",
+   "intent": "call (flute) + answer (violin) meet as one melody, then rise in thirds; dadra lilt; curtain build with tihai"
+  },
+  {
+   "bars": "10-12",
+   "name": "Stage - the grand bloom",
+   "intent": "strings sweep the call in octaves onto C6 (bVII) with the names; flute and violin trade tune and descant; Charukeshi cadence to D at 38.0"
+  },
+  {
+   "bars": "13-16",
+   "name": "Invitation card - development, reduced",
+   "intent": "readable: the call at half speed over Bm7-Gmaj7 | Em7-A, a new bansuri phrase with komal dha; mostly one piano chord per beat, santoor drops in bars 13-14, light tabla"
+  },
+  {
+   "bars": "17-19",
+   "name": "Finale - return and resolution",
+   "intent": "mukhda in thirds, Sa held over Bb-C-D, D6/9 with swarmandal glissando, santoor tremolo; fade 58.0-59.2"
+  }
+ ],
+ "parts": {
+  "bansuri": [
+   {
+    "bar": 0,
+    "beat": "1/3",
+    "notes": "A4:2/3 ~D5:1 ^E5:1/3 D5:1/3 ~F#5:4/3",
+    "dyn": "p",
+    "style": "alaap as the seal glows: breathy swell on Pa, slow meend up to Sa, kan on Re, long Ga with late gentle vibrato"
+   },
+   {
+    "bar": 1,
+    "beat": "0",
+    "notes": "A4:2/3 D5:1/3 ^E5:2/3 F#5:1/3 ~E5:2/3 ~D5:4/3",
+    "dyn": "p",
+    "style": "first hint of the call cell (Pa Sa Re Ga) - it sinks back home instead of soaring; intimate, a little rubato in feel"
+   },
+   {
+    "bar": 3,
+    "beat": "0",
+    "notes": "A4:2/3 D5:1/3 E5:2/3 ^F#5:1/3 E5:2/3 ~A5:4/3 | ~B5:2/3 A5:1/3 ^F#5:2/3 E5:1/3 F#5:1/3 E5:1/3 ~D5:1",
+    "dyn": "mp",
+    "style": "THE CALL (groom): wide meend E5->A5 lands on the anticipated beat with his name at 11.0, vibrato blooms; meend up to Dha, then down with a short murki F#-E onto Sa (held as a sus4), breath at 14.75"
+   },
+   {
+    "bar": 7,
+    "beat": "0",
+    "notes": "A4:2/3 D5:1/3 E5:2/3 F#5:1/3 E5:1/3 F#5:1/6 E5:1/6 ~A5:4/3",
+    "dyn": "mf",
+    "style": "MUKHDA call in full voice as the couple appears; A5 sustained while the violin climbs underneath to take the answer"
+   },
+   {
+    "bar": 8,
+    "beat": "2",
+    "notes": "E5:2/3 ~C#5:4/3",
+    "dyn": "mp",
+    "style": "soft harmony a third under the violin, meend down"
+   },
+   {
+    "bar": 9,
+    "beat": "0",
+    "notes": "A4:1 D5:1/3 E5:1/3 F#5:1/3 G5:2/3 ~B5:4/3 | ~A5:1 B5:1/6 A5:1/6 G5:1/6 A5:1/6 r:1/3 E5:2/3 ~G5:1 r:1/3 | ^B5:2/3 A5:1/3 G5:2/3 F#5:1/3 G5:2/3 ~E5:1 r:1/3 | A5:2/3 G5:1/3 F#5:2/3 E5:1/3 F#5:1/3 E5:1/3 ~D5:1",
+    "dyn": "mf",
+    "style": "bar 9: rising call, crescendo with the curtains; 30.0: B5 melts into A5 as a descant over the tutti bloom; bar 11: carries the answer (violin a third above); bar 12: the resolution with a murki, breath at 38.75"
+   },
+   {
+    "bar": 15,
+    "beat": "0",
+    "notes": "D5:2/3 G5:1/3 A5:2/3 B5:1/3 A5:2/3 ~F#5:4/3 | E5:2/3 F#5:1/3 G5:2/3 A5:1/3 ~Bb5:1/3 A5:1/3 ~E5:1",
+    "dyn": "p",
+    "style": "development phrase on the card, gentle and readable; Charukeshi meend into komal dha Bb5 over Gm6, then settles on Re"
+   },
+   {
+    "bar": 17,
+    "beat": "0",
+    "notes": "A4:2/3 D5:1/3 E5:2/3 F#5:1/3 E5:1/3 F#5:1/6 E5:1/6 ~A5:1 r:1/3 | ^A5:2/3 G5:1/3 F#5:2/3 E5:1/3 F#5:1/3 E5:1/3 ~D5:4/3 | A5:1/3 ~F#5:1/6 E5:1/6 ~D5:2",
+    "dyn": "mf",
+    "style": "mukhda returns; the resolution lands on Sa at 56.0 while Bb-C-D move underneath; final flourish Pa-Ga-Re-Sa with meend, D5 fades with the master"
+   }
+  ],
+  "violin": [
+   {
+    "bar": 5,
+    "beat": "0",
+    "notes": "^B5:2/3 A5:1/3 G5:2/3 F#5:1/3 G5:2/3 ~B5:2/3 ~E5:2/3 | F#5:2/3 A5:1/3 ~C#6:2/3 B5:1/3 ~Bb5:2/3 A5:1/3 G5:2/3 E5:1/3",
+    "dyn": "mp",
+    "style": "THE ANSWER (bride): kan on B5, meend up to B5 with her name at 17.0, then the sigh down to E5; then a hopeful rising question, chromatic meend B5->Bb5 (Charukeshi) over Gm6, settling on E5 as Gm6-C lifts to D"
+   },
+   {
+    "bar": 7,
+    "beat": "3",
+    "notes": "F#5:1/3 G5:1/3 A5:1/3 | ^B5:2/3 A5:1/3 G5:2/3 F#5:1/3 G5:2/3 ~E5:4/3 | F#4:1 B4:1/3 C#5:1/3 D5:1/3 E5:2/3 ~G5:4/3",
+    "dyn": "mf",
+    "style": "climbs under the flute A5 and takes the answer at 24.0 (One Special Evening); bar 9 sings a third below the flute, crescendo into the stage"
+   },
+   {
+    "bar": 10,
+    "beat": "0",
+    "notes": "A4:2/3 D5:1/3 E5:2/3 F#5:1/3 G5:2/3 ~C6:4/3 | D6:2/3 C#6:1/3 B5:2/3 A5:1/3 B5:2/3 ~G5:4/3 | D6:2/3 ~Bb5:1/3 A5:2/3 G5:1/3 A5:2/3 ~F#5:4/3",
+    "dyn": "f",
+    "style": "GRAND CALL with the string section: meend G5->C6 (komal ni) lands with the names at 32.0; then a descant a third above the flute, komal dha Bb5 in bar 12"
+   },
+   {
+    "bar": 13,
+    "beat": "0",
+    "notes": "A4:4/3 ~D5:2/3 ^E5:4/3 F#5:2/3 | ^E5:4/3 ~A5:8/3",
+    "dyn": "mp",
+    "style": "the call at half speed, warm and bright under the card; meend into D5 with RECEPTION, kan on E5"
+   },
+   {
+    "bar": 17,
+    "beat": "0",
+    "notes": "F#4:2/3 B4:1/3 C#5:2/3 D5:1/3 C#5:2/3 ~F#5:4/3",
+    "dyn": "mp",
+    "style": "the call a third below the flute (his line and her line together)"
+   },
+   {
+    "bar": 18,
+    "beat": "0",
+    "notes": "F#5:2/3 E5:1/3 A5:1/3 ~D6:1 C#6:1/3 ~Bb5:2/3 C6:2/3 | D6:3",
+    "dyn": "p",
+    "style": "tar Sa on the signature, Bb-C-D above the held Sa, diminuendo"
+   }
+  ],
+  "strings": [
+   {
+    "bar": 0,
+    "beat": "1/2",
+    "notes": "D3+A3:7/2",
+    "dyn": "pp",
+    "style": "tanpura-like Sa-Pa drone, very soft swell with the seal glow"
+   },
+   {
+    "bar": 1,
+    "beat": "0",
+    "notes": "D3+A3+E4+F#4:2 B2+F#3+A3+D4:2 | G2+D3+B3+E4:2 E3+G3+B3+D4:1 A2+E3+G3+D4:1",
+    "dyn": "pp",
+    "style": "sul tasto pad, slow swells, no vibrato at first"
+   },
+   {
+    "bar": 3,
+    "beat": "0",
+    "notes": "D3+A3+D4+F#4:2 B2+G3+A3+D4:2 | E3+G3+B3+D4:2 A2+E3+G3+D4:2",
+    "dyn": "p",
+    "style": "warm pad, gentle vibrato"
+   },
+   {
+    "bar": 5,
+    "beat": "0",
+    "notes": "G2+D3+B3+E4:2 A2+E3+G3+D4:1 A2+E3+G3+C#4:1 | F#3+A3+C#4+E4:2 G2+D3+Bb3+E4:1 C3+G3+D4+E4:1",
+    "dyn": "p",
+    "style": "violins divisi a little brighter for the bride"
+   },
+   {
+    "bar": 7,
+    "beat": "0",
+    "notes": "D3+A3+E4+F#4:2 B2+F#3+A3+D4:1 G2+D3+B3+A4:1 | E3+G3+B3+D4:2 A2+E3+G3+D4:2/3 A2+E3+G3+C#4:4/3",
+    "dyn": "mp",
+    "style": "richer full section, swell in at 21.0; cellos sing the bass line"
+   },
+   {
+    "bar": 9,
+    "beat": "0",
+    "notes": "B2+F#3+A3+D4:5/3",
+    "dyn": "mf",
+    "style": "full section on Bm7, crescendo as the curtains begin to close"
+   },
+   {
+    "bar": 9,
+    "beat": "2",
+    "notes": "G2+D3+B3+E4:2/3",
+    "dyn": "pp",
+    "style": "subito pp as the curtains close"
+   },
+   {
+    "bar": 9,
+    "beat": "8/3",
+    "notes": "A2+E3+G3+B3+D4:4/3",
+    "dyn": "mp",
+    "style": "fast crescendo into the stage"
+   },
+   {
+    "bar": 10,
+    "beat": "0",
+    "notes": "A3+A4:2/3 D4+D5:1/3 E4+E5:2/3 F#4+F#5:1/3 G4+G5:2/3 C5+C6:4/3 | B4+B5:2/3 A4+A5:1/3 G4+G5:2/3 F#4+F#5:1/3 G4+G5:2/3 E4+E5:4/3 | A4+A5:2/3 G4+G5:1/3 F#4+F#5:2/3 E4+E5:1/3 F#4+F#5:1/3 E4+E5:1/3 D4+D5:4/3",
+    "dyn": "f",
+    "style": "GRAND BLOOM: violins + violas sweep the tune in octaves, legato with portamento into each long note"
+   },
+   {
+    "bar": 10,
+    "beat": "0",
+    "notes": "D2+A2+F#3:2 C2+G2+E3:2 | G2+D3+B3:2 A2+E3+G3:2/3 A2+E3+C#4:4/3 | Bb2+D3+G3:1 A2+D3+F#3:1 A2+E3+G3+C#4:2/3 D2+A2+F#3:4/3",
+    "dyn": "f",
+    "style": "cellos + basses, broad, each chord swelling"
+   },
+   {
+    "bar": 13,
+    "beat": "0",
+    "notes": "B2+F#3+A3+D4:8/3 G2+D3+B3+F#4:4/3 | E3+G3+B3+D4:2 A2+E3+G3+D4:2/3 A2+E3+A3+C#4:4/3",
+    "dyn": "pp",
+    "style": "light half-section pad under the card, very smooth"
+   },
+   {
+    "bar": 15,
+    "beat": "0",
+    "notes": "G2+D3+B3+A4:2 F#3+A3+C#4+E4:2 | E3+G3+B3+D4:2 G2+D3+Bb3+E4:2/3 A2+E3+G3+B3+D4:4/3",
+    "dyn": "p",
+    "style": "light half-section pad under the card, very smooth"
+   },
+   {
+    "bar": 17,
+    "beat": "0",
+    "notes": "D3+A3+E4+F#4:2 B2+F#3+A3+D4:1 G2+D3+B3+F#4+A4:1 | G2+D3+B3+A4:1 A2+D3+F#3+A3:1 A2+E3+G3+C#4:2/3 Bb2+F3+C4+D4:2/3 C3+G3+D4+E4:2/3",
+    "dyn": "mp",
+    "style": "warm full pad for the return"
+   },
+   {
+    "bar": 19,
+    "beat": "0",
+    "notes": "D2+A2+F#3+B3+E4+A4:3",
+    "dyn": "mp",
+    "style": "final D6/9 (Sa Re Ga Pa Dha): warm, long natural decay into the fade"
+   }
+  ],
+  "piano": [
+   {
+    "bar": 1,
+    "beat": "0",
+    "notes": "A3:1/3 E4:1/3 F#4:1/3 A4:1/3 F#4:1/3 E4:1/3 A3:1/3 D4:1/3 F#4:1/3 A4:1/3 F#4:1/3 D4:1/3 | B3:1/3 D4:1/3 E4:1/3 B4:1/3 E4:1/3 D4:1/3 G3:1/3 B3:1/3 D4:1/3 G4:1/3 E4:1/3 D4:1/3",
+    "dyn": "pp",
+    "style": "gentle 12/8 wave arpeggio, una corda, pedal"
+   },
+   {
+    "bar": 3,
+    "beat": "0",
+    "notes": "A3+D4+F#4:2/3 D4:1/3 A3+D4+F#4:2/3 D4:1/3 G3+A3+D4:2/3 A3:1/3 G3+A3+D4:2/3 A3:1/3 | G3+B3+D4:2/3 B3:1/3 G3+B3+D4:2/3 B3:1/3 G3+D4+E4:2/3 D4:1/3 G3+D4+E4:2/3 D4:1/3 | B3+D4+E4:2/3 D4:1/3 B3+D4+E4:2/3 D4:1/3 G3+D4+E4:2/3 D4:1/3 G3+C#4+E4:2/3 C#4:1/3 | A3+C#4+E4:2/3 C#4:1/3 A3+C#4+E4:2/3 C#4:1/3 Bb3+D4+E4:2/3 D4:1/3 G3+D4+E4:2/3 D4:1/3",
+    "dyn": "p",
+    "style": "long-short 12/8 lilt chords, soft, pedal"
+   },
+   {
+    "bar": 7,
+    "beat": "0",
+    "notes": "A3+E4+F#4:2/3 E4:1/3 A3+E4+F#4:2/3 E4:1/3 A3+D4+F#4:2/3 D4:1/3 B3+D4+A4:2/3 D4:1/3 | G3+B3+D4:2/3 B3:1/3 G3+B3+D4:2/3 B3:1/3 G3+D4+E4:2/3 G3+C#4+E4:1/3 G3+C#4+E4:2/3 C#4:1/3 | A3+D4+F#4:2/3 D4:1/3 A3+D4+F#4:2/3 D4:1/3 r:1 G3+B3+D4+E4:2/3 B3:1/3",
+    "dyn": "mp",
+    "style": "lilt chords, warmer, supporting the melody"
+   },
+   {
+    "bar": 10,
+    "beat": "0",
+    "notes": "A3+E4+F#4:1 A3+E4+F#4:1 G3+D4+E4:1 G3+D4+E4:1 | B3+D4+E4:1 B3+D4+E4:1 G3+B3+D4+E4:2/3 G3+C#4+E4:1/3 G3+C#4+E4:1 | G3+D4:1 A3+D4:1 G3+C#4+E4:2/3 A3+E4+F#4:1/3 A3+E4+F#4:1",
+    "dyn": "mp",
+    "style": "dotted-quarter chord pulses under the strings, pedal"
+   },
+   {
+    "bar": 13,
+    "beat": "0",
+    "notes": "A3+D4+F#4:1 A3+D4+F#4:1 A3+D4+F#4:2/3 B3+D4+F#4:1/3 B3+D4+F#4:1 | G3+B3+D4:1 G3+B3+D4:1 G3+D4+E4:2/3 A3+C#4+E4:1/3 A3+C#4+E4:1 | B3+D4+A4:1 B3+D4+A4:1 A3+C#4+E4:1 A3+C#4+E4:1 | G3+B3+D4:1 G3+B3+D4:1 Bb3+D4+E4:2/3 G3+B3+D4+E4:1/3 G3+B3+D4+E4:1",
+    "dyn": "p",
+    "style": "soft chords, mostly one per dotted quarter, readable and unhurried"
+   },
+   {
+    "bar": 17,
+    "beat": "0",
+    "notes": "A3+E4+F#4:2/3 E4:1/3 A3+E4+F#4:2/3 E4:1/3 A3+D4+F#4:2/3 D4:1/3 B3+D4+F#4+A4:2/3 D4:1/3 | B3+D4+A4:2/3 D4:1/3 A3+D4+F#4:2/3 D4:1/3 G3+C#4+E4:2/3 C4+D4+F4:1/3 C4+D4+F4:1/3 G3+D4+E4:2/3",
+    "dyn": "mp",
+    "style": "lilt chords for the return"
+   },
+   {
+    "bar": 19,
+    "beat": "0",
+    "notes": "D2+A2+F#3+B3+E4:3",
+    "dyn": "mp",
+    "style": "final D6/9, rolled upward slowly, pedal held into the fade"
+   }
+  ],
+  "santoor": [
+   {
+    "bar": 0,
+    "beat": "1/2",
+    "notes": "A4+D5:1/6 A4+D5:1/6 A4+D5:1/6 A4+D5:1/6 A4+D5:1/6 A4+D5:1/6 A4+D5:1/6 A4+D5:1/6 A4+D5:1/6 A4+D5:1/6 A4+D5:1/6 A4+D5:1/6",
+    "dyn": "pp",
+    "style": "soft tremolo (Pa-Sa) swelling and fading with the pulsing seal"
+   },
+   {
+    "bar": 5,
+    "beat": "0",
+    "notes": "B4:1 D5:1 A4:1 C#5:1 | A4:1 E5:1 D5:1 D5:1",
+    "dyn": "p",
+    "style": "sparse ringing drops under the bride, one per beat, soft mallets"
+   },
+   {
+    "bar": 7,
+    "beat": "0",
+    "notes": "A4:1/3 D5:1/3 E5:1/3 F#5:1/3 E5:1/3 D5:1/3 A4:1/3 B4:1/3 D5:1/3 B4:1/3 D5:1/3 B4:1/3 | B4:1/3 D5:1/3 E5:1/3 G5:1/3 E5:1/3 D5:1/3 A4:1/3 D5:1/3 E5:1/3 G5:1/3 E5:1/3 C#5:1/3",
+    "dyn": "p",
+    "style": "broken chords, gently bright"
+   },
+   {
+    "bar": 9,
+    "beat": "8/3",
+    "notes": "E5+A5:1/6 E5+A5:1/6 E5+A5:1/6 E5+A5:1/6 E5+A5:1/6 E5+A5:1/6 E5+A5:1/6 E5+A5:1/6",
+    "dyn": "mf",
+    "style": "tremolo crescendo under the closing curtains"
+   },
+   {
+    "bar": 10,
+    "beat": "0",
+    "notes": "A4:1/3 D5:1/3 E5:1/3 F#5:1/3 E5:1/3 D5:1/3 C5:1/3 D5:1/3 C5+C6:1/6 C5+C6:1/6 C5+C6:1/6 C5+C6:1/6 C5+C6:1/6 C5+C6:1/6 D5:1/3 | B4:1/3 D5:1/3 E5:1/3 G5:1/3 E5:1/3 D5:1/3 A4:1/3 D5:1/3 E5:1/3 G5:1/3 E5:1/3 C#5:1/3 | D4:1/3 D5:1/3 D5:1/3 A5:1/3 D5:1/3 D5:1/3 A4:1/3 C#5:1/3 E5:1/3 F#5:1/3 E5:1/3 D5:1/3",
+    "dyn": "mf",
+    "style": "bright broken chords - Indian sparkle inside the bloom"
+   },
+   {
+    "bar": 13,
+    "beat": "0",
+    "notes": "D5:1 B4:1 D5:2/3 D5:1/3 B4:1 | E5:1 D5:1 E5:2/3 E5:1/3 A4:1",
+    "dyn": "p",
+    "style": "sparse single drops, one per beat, let ring - elegant under the card"
+   },
+   {
+    "bar": 17,
+    "beat": "8/3",
+    "notes": "A4+D5:1/6 A4+D5:1/6 A4+D5:1/6 A4+D5:1/6 A4+D5:1/6 A4+D5:1/6 A4+D5:1/6 A4+D5:1/6",
+    "dyn": "p",
+    "style": "soft tremolo swell"
+   },
+   {
+    "bar": 18,
+    "beat": "8/3",
+    "notes": "D4+D5:1/6 D4+D5:1/6 D4+D5:1/6 D4+D5:1/6 D4+D5:1/6 D4+D5:1/6 D4+D5:1/6 D4+D5:1/6",
+    "dyn": "p",
+    "style": "soft tremolo swell"
+   },
+   {
+    "bar": 19,
+    "beat": "0",
+    "notes": "D5+A5:1/6 D5+A5:1/6 D5+A5:1/6 D5+A5:1/6 D5+A5:1/6 D5+A5:1/6 D5+A5:1/6 D5+A5:1/6 D5+A5:1/6 D5+A5:1/6 D5+A5:1/6 D5+A5:1/6 D5+A5:1",
+    "dyn": "p",
+    "style": "final tremolo on Sa-Pa, dying away"
+   }
+  ],
+  "harp": [
+   {
+    "bar": 0,
+    "beat": "5/2",
+    "notes": "D4:1/12 E4:1/12 F#4:1/12 A4:1/12 B4:1/12 D5:1/12 E5:1/12 F#5:1/12 A5:1/12 B5:1/12 D6:5/12",
+    "dyn": "p",
+    "style": "swarmandal glissando (Sa Re Ga Pa Dha) as the seal flies off, let ring"
+   },
+   {
+    "bar": 2,
+    "beat": "3",
+    "notes": "A3:1/12 B3:1/12 D4:1/12 E4:1/12 F#4:1/12 A4:1/12 B4:1/12 D5:1/12 E5:1/12 F#5:1/12 A5:1/12 B5:1/12",
+    "dyn": "p",
+    "style": "upward glissando with the petal swirl into the courtyard"
+   },
+   {
+    "bar": 4,
+    "beat": "3",
+    "notes": "D6:1/12 B5:1/12 A5:1/12 F#5:1/12 E5:1/12 D5:1/12 B4:1/12 A4:1/12 F#4:1/12 E4:1/12 D4:1/12 A3:1/12",
+    "dyn": "p",
+    "style": "descending glissando with the petal wipe"
+   },
+   {
+    "bar": 6,
+    "beat": "3",
+    "notes": "C4:1/12 D4:1/12 E4:1/12 G4:1/12 A4:1/12 C5:1/12 D5:1/12 E5:1/12 G5:1/12 A5:1/12 C6:1/12 D6:1/12",
+    "dyn": "p",
+    "style": "glissando over Cadd9 as the ring of flowers blooms"
+   },
+   {
+    "bar": 9,
+    "beat": "10/3",
+    "notes": "A3:1/12 B3:1/12 D4:1/12 E4:1/12 G4:1/12 A4:1/12 B4:1/12 D5:1/12",
+    "dyn": "mf",
+    "style": "swarmandal glissando up as the curtains part"
+   },
+   {
+    "bar": 10,
+    "beat": "0",
+    "notes": "D3+A3+D4+F#4+A4:2",
+    "dyn": "mf",
+    "style": "rolled D chord landing, let ring"
+   },
+   {
+    "bar": 12,
+    "beat": "3",
+    "notes": "D4:1/12 E4:1/12 F#4:1/12 A4:1/12 B4:1/12 D5:1/12 E5:1/12 F#5:1/12 A5:1/12 B5:1/12 D6:1/12 E6:1/12",
+    "dyn": "mp",
+    "style": "glissando up as the invitation card rises"
+   },
+   {
+    "bar": 16,
+    "beat": "3",
+    "notes": "E6:1/12 D6:1/12 B5:1/12 A5:1/12 E5:1/12 D5:1/12 B4:1/12 A4:1/12 E4:1/12 D4:1/12 B3:1/12 A3:1/12",
+    "dyn": "p",
+    "style": "descending glissando as the card leaves"
+   },
+   {
+    "bar": 18,
+    "beat": "8/3",
+    "notes": "Bb3:1/6 D4:1/6 F4:1/6 C5:1/6 C4:1/6 E4:1/6 G4:1/6 D5:1/6",
+    "dyn": "mp",
+    "style": "arpeggiates Bb(add9) then Cadd9 into the final chord"
+   },
+   {
+    "bar": 19,
+    "beat": "0",
+    "notes": "D4:1/12 E4:1/12 F#4:1/12 A4:1/12 B4:1/12 D5:1/12 E5:1/12 F#5:1/12 A5:1/12 B5:1/12 D6:23/12",
+    "dyn": "mp",
+    "style": "final swarmandal glissando - the delicate Indian flourish; let every string ring"
+   }
+  ],
+  "sitar": [
+   {
+    "bar": 2,
+    "beat": "1",
+    "notes": "G4:2/3 F#4:1/3 E4:2/3 D4:1/3 ~E4:1",
+    "dyn": "p",
+    "style": "soft low answering line - a glimpse of the answer contour"
+   },
+   {
+    "bar": 4,
+    "beat": "0",
+    "notes": "B4:2/3 A4:1/3 ^F#4:2/3 E4:1/3 F#4:1/3 E4:1/3 ~D4:1",
+    "dyn": "mp",
+    "style": "doubles the groom's resolution an octave below the bansuri"
+   },
+   {
+    "bar": 14,
+    "beat": "3",
+    "notes": "E4:1/3 F#4:1/3 ~A4:1/3",
+    "dyn": "p",
+    "style": "echo under the violin A5"
+   }
+  ],
+  "bass": [
+   {
+    "bar": 3,
+    "beat": "0",
+    "notes": "D2:2 B1:2 | E2:2 A1:2 | G2:2 A1:2 | F#2:2 G2:1 C2:1",
+    "dyn": "p",
+    "style": "warm finger bass, long roots, very legato"
+   },
+   {
+    "bar": 7,
+    "beat": "0",
+    "notes": "D2:1 A2:1 B1:1 G2:1 | E2:1 B2:1 A1:1 E2:1 | B1:1 F#2:1 r:2/3 A1:1/3 E2:1",
+    "dyn": "mp",
+    "style": "dotted-quarter roots and fifths, round and soft"
+   },
+   {
+    "bar": 10,
+    "beat": "0",
+    "notes": "D2:1 A2:1 C2:1 G2:1 | G2:1 D3:1 A1:1 E2:1 | Bb1:1 A1:5/3 D2:1/3 A2:1",
+    "dyn": "f",
+    "style": "broad roots and fifths under the bloom"
+   },
+   {
+    "bar": 13,
+    "beat": "0",
+    "notes": "B1:8/3 G2:4/3 | E2:2 A1:2 | G2:2 F#2:2 | E2:2 G2:2/3 A1:4/3",
+    "dyn": "p",
+    "style": "long roots, light"
+   },
+   {
+    "bar": 17,
+    "beat": "0",
+    "notes": "D2:1 A2:1 B1:1 G2:1 | G2:1 A1:5/3 Bb1:1/3 F2:1/3 C2:2/3",
+    "dyn": "mp",
+    "style": "roots and fifths, Bb-C walking into the final D"
+   },
+   {
+    "bar": 19,
+    "beat": "0",
+    "notes": "D2:3",
+    "dyn": "mp",
+    "style": "final root, let ring"
+   }
+  ],
+  "bells": [
+   {
+    "bar": 2,
+    "beat": "3",
+    "notes": "B6:1/6 A6:1/6 F#6:1/6 E6:1/6 D6:1/3",
+    "dyn": "pp",
+    "style": "celesta cascade - petal swirl and white bloom"
+   },
+   {
+    "bar": 3,
+    "beat": "8/3",
+    "notes": "A6:1/3 F#6:1/3 D6:1/3 E6:1/3 A6:1",
+    "dyn": "p",
+    "style": "celesta sparkle - the groom's name"
+   },
+   {
+    "bar": 5,
+    "beat": "8/3",
+    "notes": "E6:1/3 G6:1/3 B6:1/3 A6:1",
+    "dyn": "p",
+    "style": "glockenspiel sparkle - the bride's name"
+   },
+   {
+    "bar": 6,
+    "beat": "11/3",
+    "notes": "D6:1/3 A6:2/3 F#6:1",
+    "dyn": "pp",
+    "style": "music box - the ring of flowers blooms around the couple"
+   },
+   {
+    "bar": 8,
+    "beat": "8/3",
+    "notes": "C#6:1/3 E6:1/3 A6:4/3",
+    "dyn": "p",
+    "style": "celesta sparkle - An Unforgettable Celebration"
+   },
+   {
+    "bar": 9,
+    "beat": "10/3",
+    "notes": "D6:1/6 E6:1/6 G6:1/6 A6:1/6",
+    "dyn": "p",
+    "style": "celesta upward sparkle - curtains part"
+   },
+   {
+    "bar": 10,
+    "beat": "0",
+    "notes": "D5:4",
+    "dyn": "p",
+    "style": "tubular bells - one warm temple-bell stroke on the stage reveal"
+   },
+   {
+    "bar": 10,
+    "beat": "8/3",
+    "notes": "G6:1/3 C7:1/3 E6:1/3 G6:1",
+    "dyn": "p",
+    "style": "glockenspiel sparkle - the couple's names"
+   },
+   {
+    "bar": 13,
+    "beat": "0",
+    "notes": "B5:1/3 D6:1/3 F#6:4/3",
+    "dyn": "pp",
+    "style": "celesta - the card rises"
+   },
+   {
+    "bar": 13,
+    "beat": "11/3",
+    "notes": "A6:1/3 F#6:1/3 D6:2/3",
+    "dyn": "p",
+    "style": "glockenspiel twinkle - the date"
+   },
+   {
+    "bar": 16,
+    "beat": "3",
+    "notes": "B6:1/6 A6:1/6 E6:1/6 D6:1/2",
+    "dyn": "pp",
+    "style": "celesta - the card leaves"
+   },
+   {
+    "bar": 18,
+    "beat": "4/3",
+    "notes": "F#6:1/6 A6:1/6 D7:1/3 A6:1/3 E6:1/3",
+    "dyn": "p",
+    "style": "celesta + tinkle bell - the signature"
+   }
+  ],
+  "tabla": [
+   {
+    "bar": 0,
+    "pattern": "none",
+    "level": 0
+   },
+   {
+    "bar": 1,
+    "pattern": "none",
+    "level": 0
+   },
+   {
+    "bar": 2,
+    "pattern": "none",
+    "level": 0
+   },
+   {
+    "bar": 3,
+    "pattern": "light",
+    "level": 0.22,
+    "strokes": "Ge:2/3 Na:1/3 Tin:2/3 Na:1/3 Ge:2/3 Na:1/3 Tin:2/3 Na:1/3"
+   },
+   {
+    "bar": 4,
+    "pattern": "light",
+    "level": 0.22,
+    "strokes": "Ge:2/3 Na:1/3 Tin:2/3 Na:1/3 Ge:2/3 Na:1/3 Ti:1/3 Te:1/3 Na:1/3"
+   },
+   {
+    "bar": 5,
+    "pattern": "light",
+    "level": 0.26,
+    "strokes": "Ge:2/3 Na:1/3 Tin:2/3 Na:1/3 Ge:2/3 Na:1/3 Tin:2/3 Na:1/3"
+   },
+   {
+    "bar": 6,
+    "pattern": "light",
+    "level": 0.26,
+    "strokes": "Ge:2/3 Na:1/3 Tin:2/3 Na:1/3 Ge:2/3 Na:1/3 Ti:1/3 Te:1/3 Na:1/3"
+   },
+   {
+    "bar": 7,
+    "pattern": "dadra",
+    "level": 0.38,
+    "strokes": "Dha:2/3 Na:1/3 Dha:1/3 Tin:1/3 Na:1/3 Dha:2/3 Na:1/3 Dha:1/3 Tin:1/3 Na:1/3"
+   },
+   {
+    "bar": 8,
+    "pattern": "dadra",
+    "level": 0.4,
+    "strokes": "Dha:2/3 Na:1/3 Dha:1/3 Tin:1/3 Na:1/3 Dha:2/3 Na:1/3 Dha:1/3 Tin:1/3 Na:1/3"
+   },
+   {
+    "bar": 9,
+    "pattern": "tihai",
+    "level": 0.5,
+    "strokes": "Dha:2/3 Na:1/3 Na:1/3 Te:1/6 Te:1/6 Na:1/6 Ke:1/6 Dha:1/3 Te:1/6 Te:1/6 Na:1/6 Ke:1/6 Dha:1/3 Te:1/6 Te:1/6 Na:1/6 Ke:1/6",
+    "cresc": [
+     0.5,
+     1
+    ]
+   },
+   {
+    "bar": 10,
+    "pattern": "dadra",
+    "level": 0.7,
+    "strokes": "!Dha:1/3 Dhin:1/3 Na:1/3 Dha:1/3 Tin:1/3 Na:1/3 Dha:1/3 Dhin:1/3 Na:1/3 Dha:1/3 Tin:1/3 Na:1/3"
+   },
+   {
+    "bar": 11,
+    "pattern": "dadra",
+    "level": 0.7,
+    "strokes": "Dha:1/3 Dhin:1/3 Na:1/3 Dha:1/3 Tin:1/3 Na:1/3 Dha:1/3 Dhin:1/3 Na:1/3 Dha:1/3 Tin:1/3 Na:1/3"
+   },
+   {
+    "bar": 12,
+    "pattern": "dadra",
+    "level": 0.55,
+    "strokes": "Dha:1/3 Dhin:1/3 Na:1/3 Dha:1/3 Tin:1/3 Na:1/3 Dha:1/3 Dhin:1/3 Dha:4/3"
+   },
+   {
+    "bar": 13,
+    "pattern": "light",
+    "level": 0.2,
+    "strokes": "Ge:2/3 Na:1/3 Tin:2/3 Na:1/3 Ge:2/3 Na:1/3 Tin:2/3 Na:1/3"
+   },
+   {
+    "bar": 14,
+    "pattern": "light",
+    "level": 0.2,
+    "strokes": "Ge:2/3 Na:1/3 Tin:2/3 Na:1/3 Ge:2/3 Na:1/3 Tin:2/3 Na:1/3"
+   },
+   {
+    "bar": 15,
+    "pattern": "light",
+    "level": 0.2,
+    "strokes": "Ge:2/3 Na:1/3 Tin:2/3 Na:1/3 Ge:2/3 Na:1/3 Tin:2/3 Na:1/3"
+   },
+   {
+    "bar": 16,
+    "pattern": "light",
+    "level": 0.22,
+    "strokes": "Ge:2/3 Na:1/3 Tin:2/3 Na:1/3 Ge:2/3 Na:1/3 Ti:1/3 Te:1/3 Na:1/3"
+   },
+   {
+    "bar": 17,
+    "pattern": "dadra",
+    "level": 0.38,
+    "strokes": "Dha:2/3 Na:1/3 Dha:1/3 Tin:1/3 Na:1/3 Dha:2/3 Na:1/3 Dha:1/3 Tin:1/3 Na:1/3"
+   },
+   {
+    "bar": 18,
+    "pattern": "dadra",
+    "level": 0.38,
+    "strokes": "Dha:2/3 Na:1/3 Dha:1/3 Tin:1/3 Na:1/3 Tin:1/3 Ti:1/6 Te:1/6 Dha:1/3 Ti:1/6 Te:1/6 Dha:1/3 Ti:1/6 Te:1/6"
+   },
+   {
+    "bar": 19,
+    "pattern": "light",
+    "level": 0.32,
+    "strokes": "!Dha:3"
+   }
+  ],
+  "hand_percussion": [
+   {
+    "bar": 0,
+    "instrument": "wind_chimes",
+    "pattern": "r:1/2 x:7/2",
+    "level": 0.18
+   },
+   {
+    "bar": 2,
+    "instrument": "wind_chimes",
+    "pattern": "r:3 x:1",
+    "level": 0.16
+   },
+   {
+    "bar": 3,
+    "instrument": "finger_cymbals",
+    "pattern": "x:4",
+    "level": 0.14
+   },
+   {
+    "bar": 5,
+    "instrument": "finger_cymbals",
+    "pattern": "x:4",
+    "level": 0.14
+   },
+   {
+    "bar": 6,
+    "instrument": "wind_chimes",
+    "pattern": "r:3 x:1",
+    "level": 0.15
+   },
+   {
+    "bar": 7,
+    "instrument": "finger_cymbals",
+    "pattern": "x:4",
+    "level": 0.18
+   },
+   {
+    "bar": 7,
+    "instrument": "shaker",
+    "pattern": "X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3",
+    "level": 0.1
+   },
+   {
+    "bar": 8,
+    "instrument": "shaker",
+    "pattern": "X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3",
+    "level": 0.11
+   },
+   {
+    "bar": 9,
+    "instrument": "bell_tree",
+    "pattern": "r:10/3 x:2/3",
+    "level": 0.28
+   },
+   {
+    "bar": 10,
+    "instrument": "finger_cymbals",
+    "pattern": "x:4",
+    "level": 0.22
+   },
+   {
+    "bar": 10,
+    "instrument": "shaker",
+    "pattern": "X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3",
+    "level": 0.18
+   },
+   {
+    "bar": 11,
+    "instrument": "shaker",
+    "pattern": "X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3",
+    "level": 0.18
+   },
+   {
+    "bar": 12,
+    "instrument": "shaker",
+    "pattern": "X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 X:4/3",
+    "level": 0.16
+   },
+   {
+    "bar": 13,
+    "instrument": "finger_cymbals",
+    "pattern": "x:4",
+    "level": 0.14
+   },
+   {
+    "bar": 16,
+    "instrument": "bell_tree",
+    "pattern": "r:3 x:1",
+    "level": 0.2
+   },
+   {
+    "bar": 17,
+    "instrument": "finger_cymbals",
+    "pattern": "x:4",
+    "level": 0.15
+   },
+   {
+    "bar": 17,
+    "instrument": "shaker",
+    "pattern": "X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3",
+    "level": 0.1
+   },
+   {
+    "bar": 18,
+    "instrument": "shaker",
+    "pattern": "X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 x:1/3 X:1/3 x:1/3 r:4/3",
+    "level": 0.1
+   },
+   {
+    "bar": 19,
+    "instrument": "finger_cymbals",
+    "pattern": "x:3",
+    "level": 0.14
+   },
+   {
+    "bar": 19,
+    "instrument": "wind_chimes",
+    "pattern": "x:3",
+    "level": 0.14
+   }
+  ]
+ },
+ "dynamics": [
+  {
+   "t": 0,
+   "level_db": -22
+  },
+  {
+   "t": 0.35,
+   "level_db": -18
+  },
+  {
+   "t": 3,
+   "level_db": -15
+  },
+  {
+   "t": 9,
+   "level_db": -13
+  },
+  {
+   "t": 11,
+   "level_db": -11
+  },
+  {
+   "t": 15,
+   "level_db": -12
+  },
+  {
+   "t": 17,
+   "level_db": -10
+  },
+  {
+   "t": 21,
+   "level_db": -7
+  },
+  {
+   "t": 24,
+   "level_db": -6
+  },
+  {
+   "t": 27,
+   "level_db": -5
+  },
+  {
+   "t": 28.25,
+   "level_db": -5
+  },
+  {
+   "t": 28.5,
+   "level_db": -10
+  },
+  {
+   "t": 29,
+   "level_db": -10
+  },
+  {
+   "t": 29.5,
+   "level_db": -3
+  },
+  {
+   "t": 30,
+   "level_db": 0
+  },
+  {
+   "t": 33,
+   "level_db": -1
+  },
+  {
+   "t": 36,
+   "level_db": -2
+  },
+  {
+   "t": 38,
+   "level_db": -3
+  },
+  {
+   "t": 39,
+   "level_db": -10
+  },
+  {
+   "t": 45,
+   "level_db": -11
+  },
+  {
+   "t": 48,
+   "level_db": -10
+  },
+  {
+   "t": 51,
+   "level_db": -6
+  },
+  {
+   "t": 53,
+   "level_db": -5
+  },
+  {
+   "t": 56,
+   "level_db": -4
+  },
+  {
+   "t": 57,
+   "level_db": -5
+  },
+  {
+   "t": 58,
+   "level_db": -7
+  },
+  {
+   "t": 59.2,
+   "level_db": -60
+  }
+ ],
+ "cue_hits": [
+  {
+   "t": 0.25,
+   "event": "seal glows",
+   "music": "bansuri alaap on Pa; santoor tremolo + wind chimes from 0.375"
+  },
+  {
+   "t": 1.875,
+   "event": "seal flies off",
+   "music": "harp swarmandal glissando"
+  },
+  {
+   "t": 3,
+   "event": "twilight garden",
+   "music": "bansuri hints the call; piano 12/8 wave"
+  },
+  {
+   "t": 7.25,
+   "event": "floral frame grows",
+   "music": "sitar answers softly, an octave low"
+  },
+  {
+   "t": 8.25,
+   "event": "petal swirl and bloom",
+   "music": "harp glissando, celesta cascade, wind chimes"
+  },
+  {
+   "t": 9,
+   "event": "groom courtyard",
+   "music": "the call on bansuri; tabla and bass enter"
+  },
+  {
+   "t": 11,
+   "event": "groom name",
+   "music": "meend leap to A5 on the anticipated beat + celesta"
+  },
+  {
+   "t": 14.25,
+   "event": "petal wipe",
+   "music": "harp descending glissando, flute holds Sa"
+  },
+  {
+   "t": 15,
+   "event": "bride terrace",
+   "music": "violin answer, santoor drops"
+  },
+  {
+   "t": 17,
+   "event": "bride name",
+   "music": "violin meend up to B5, sighing to E5 at 17.5, + glockenspiel"
+  },
+  {
+   "t": 20.25,
+   "event": "petal swirl, ring blooms",
+   "music": "Gm6 -> Cadd9 lift, harp glissando, music box at 20.75"
+  },
+  {
+   "t": 21,
+   "event": "couple in the floral ring",
+   "music": "Dadd9: the full mukhda begins; dadra lilt, shaker"
+  },
+  {
+   "t": 24,
+   "event": "One Special Evening",
+   "music": "violin takes the answer"
+  },
+  {
+   "t": 26,
+   "event": "Unforgettable Celebration sparkles",
+   "music": "violin E5 with flute C#5 over A7, celesta"
+  },
+  {
+   "t": 28.25,
+   "event": "curtains close",
+   "music": "tabla tihai; strings release with the curtain, subito pp at 28.5, piano and bass silent, fast crescendo with santoor tremolo from 29.0"
+  },
+  {
+   "t": 29.5,
+   "event": "curtains part",
+   "music": "harp glissando + bell tree + celesta"
+  },
+  {
+   "t": 30,
+   "event": "RECEPTION STAGE (climax)",
+   "music": "tutti bloom: strings sweep the call in octaves, temple bell, tabla sam"
+  },
+  {
+   "t": 32,
+   "event": "couple names",
+   "music": "violin + strings meend to C6 over Cadd9 + glockenspiel"
+  },
+  {
+   "t": 34,
+   "event": "Cordially invite you",
+   "music": "bansuri answer, violin descant a third above"
+  },
+  {
+   "t": 36,
+   "event": "invitation message",
+   "music": "Charukeshi resolution, cadence on D at 38.0"
+  },
+  {
+   "t": 38.25,
+   "event": "card begins to rise",
+   "music": "harp glissando; texture thins"
+  },
+  {
+   "t": 39,
+   "event": "INVITATION CARD",
+   "music": "violin solo: the call at half speed over Bm7; sustained piano chords, santoor drops"
+  },
+  {
+   "t": 41.75,
+   "event": "DATE sparkles",
+   "music": "glockenspiel over the violin F#5"
+  },
+  {
+   "t": 42.5,
+   "event": "venue and address",
+   "music": "violin E5 rising to a long A5 at 43.0, calm"
+  },
+  {
+   "t": 45,
+   "event": "card held for reading",
+   "music": "bansuri development phrase; komal-dha meend at 49.5"
+  },
+  {
+   "t": 50.25,
+   "event": "card leaves",
+   "music": "harp glissando, celesta, bell tree"
+  },
+  {
+   "t": 51,
+   "event": "FINALE",
+   "music": "mukhda returns, flute and violin in thirds"
+  },
+  {
+   "t": 55,
+   "event": "signature sparkles",
+   "music": "celesta + tinkle bell"
+  },
+  {
+   "t": 56,
+   "event": "closing hold",
+   "music": "flute on Sa over Bb(add9) -> Cadd9"
+  },
+  {
+   "t": 57,
+   "event": "final chord",
+   "music": "D6/9 tutti, swarmandal glissando, santoor tremolo, flute flourish"
+  },
+  {
+   "t": 58,
+   "event": "master fade",
+   "music": "decays to silence by 59.2"
+  }
+ ],
+ "originality_note": "Composed from scratch for this film: the call/answer mukhda, its rhythm (lilting quarter-eighth cells landing on the anticipated last eighth of beat 3), the harmony and every countermelody are original. No existing film or wedding song is used, quoted or paraphrased; the raga colours (Khamaj komal ni, Charukeshi komal dha, Bhupali pentatonic) are shared idioms, not borrowed melodies.",
+ "revision_note": "Revised after a three-judge review and independent technical and musical checks. Curtains: strings release at 28.25, a subito-pp hush with piano and bass silent, then a crescendo; the tihai grows into sam at 30.0. Melody: a dotted launch in bar 9, murkis before the mukhda leaps and on Pa at 30.75, the bride blooms to B5 at 17.0, the card carries the call at half speed with a meend and kans, and the violin reaches tar Sa on the signature at 55.0. Texture: real santoor rolls on same-pitch tremolos, sparse santoor drops under the bride and the card, sitar answers in bars 2 and 4, fewer bells, and a bar-18 tihai that lands accented on the final chord."
+}

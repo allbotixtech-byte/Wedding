@@ -156,20 +156,40 @@ The originals you supplied and the lossless cut-outs are kept in `assets/source/
 
 ## 6. Music
 
-The soundtrack is an **original Bollywood-style score**: a dholak keherwa groove, dhol, claps and ghungroo, bass,
-a string section, santoor, sitar, bansuri and a shehnai lead, in D major at 80 BPM. It is synthesized by code in
-`tools/compose-music.mjs` — no samples, no third-party recordings and no borrowed melodies, so it is free to share
-anywhere. It is cut to the picture: the groove drops in with the groom at 9 s, the chorus bursts open with the curtains
-at 30 s, it calms down while guests read the date and venue (39–51 s), and the final chorus ends on one big hit at 57 s.
+The soundtrack is **“Saanjh Ki Dor” (The Twilight Thread)**, an original Bollywood romantic instrumental written for
+this film: D major in a gentle 12/8 lilt, with Khamaj and Charukeshi colours. The bansuri gives the groom a call and the
+violin gives the bride an answer. When the couple appears, the two halves meet as one melody (the *mukhda*), which then
+climbs higher at the stage reveal, returns softly at half speed under the invitation card, and comes back for the finale
+on a D6/9 chord with a swarmandal glissando and a santoor tremolo.
+
+It is cut to the picture:
+* the melody lands on the groom's name at 11 s and on the bride's at 17 s;
+* the strings hush as the curtains close (28.5 s) and bloom when they open (30 s);
+* tabla tihais land exactly on the stage reveal (30 s) and on the final chord (57 s);
+* the music becomes light and readable while guests read the date and venue (39–51 s).
+
+**How it is made.** Every note is written out in `tools/music/score.json`, and `tools/music/render.mjs` plays it with
+real recorded instruments, then mixes and masters it to −16 LUFS:
+* **SoundFont samples** for the bansuri (with breath, meend glides and vibrato), solo violin, sitar, piano, string section,
+  harp, santoor, acoustic bass and bells;
+* **real recordings** for the tabla (retuned to the song's Sa), the swarmandal glissandi, santoor tremolo rolls, shaker,
+  tambourine, finger cymbals, bell tree and wind chimes.
+
+Nothing is copied from an existing song, and every sound source allows this use (see *Credits*).
 
 > Please do not replace it with a film song (for example from YouTube). Commercial songs are copyrighted, and because
 > this invitation is published online, the site or the repository can be taken down for it.
 
-* Regenerate / tweak it: edit the clearly marked settings at the top of `tools/compose-music.mjs`, then
+* **Regenerate it** (about 2 minutes):
   ```
   npm run music
   ```
-* Use your own track instead: save it as `assets/music/reception-theme.mp3` **and** delete (or replace)
+  The first run downloads the SoundFonts and recordings (about 93 MB) into `tools/music/sounds/` and checks each file's
+  SHA-256; after that it works offline. `npm run music -- --report` also prints each instrument's level per scene.
+* **Tweak it:** the notes, timing and dynamics are in `tools/music/score.json` (the format is explained at the top of
+  `tools/music/score.mjs`); the balance of the instruments is the `mix` block of `tools/music/instruments.json`.
+  Then run `npm run render:all` so the videos get the new music too.
+* **Use your own track instead:** save it as `assets/music/reception-theme.mp3` **and** delete (or replace)
   `assets/music/reception-theme.wav` — or change `MUSIC` in `config.js`. It should be at least 60 seconds long;
   anything longer is cut at 59.5 s. Only use music you have the rights to share.
 
@@ -239,7 +259,9 @@ reception-invitation/
 ├─ tools/
 │  ├─ serve.mjs          tiny local web server (npm run dev / preview)
 │  ├─ build-site.mjs     collects the website into dist/ (npm run build)
-│  ├─ compose-music.mjs  writes the soundtrack
+│  ├─ compose-music.mjs  writes the soundtrack (npm run music)
+│  ├─ music/             its score, instrument settings, renderer and the list of sound sources
+│  │                     (sounds/ is downloaded on first use and not committed)
 │  ├─ paint-backgrounds.mjs + paint/   paint every background and decoration from code
 │  └─ browser.mjs        finds Chrome / Edge
 ├─ dist/                 the website on its own, made by npm run build (safe to delete)
@@ -277,6 +299,23 @@ tools, no renderer, no videos, and not your original artwork.
 ## Credits
 
 * Character illustrations: supplied by the couple.
-* Backgrounds, florals, decorations, animation and the Bollywood-style soundtrack: created for this invitation (code in this folder).
+* Backgrounds, florals, decorations and animation: created for this invitation (code in this folder).
+* Music: “Saanjh Ki Dor”, composed for this invitation (`tools/music/score.json`). Instrument sounds:
+  * **GeneralUser GS** v2.0.3 by S. Christian Collins: bansuri (flute, with a soft shakuhachi breath layer), violin,
+    sitar, tubular bell and tinker bell.
+    GeneralUser GS License v2.0, free for music creation, private or commercial
+    (`tools/music/licences/GeneralUser-GS_LICENSE.txt`).
+  * **MuseScore_General** v0.2: piano, strings, harp, santoor, acoustic bass, celesta, glockenspiel and music box.
+    MIT licence. FluidR3 by Frank Wen © 2000–02; FluidR3Mono by Michael Cowgill © 2014–17; adaptation for
+    MuseScore_General by S. Christian Collins © 2018–19; Temple Blocks by Ethan Winer © 2002; Drumline Cymbals by
+    Michael Schorsch © 2016 (`tools/music/licences/MuseScore_General_License.md`).
+  * **Tabla:** single-stroke recordings from the Sonic Pi sample set, originally recorded by dio_333 on freesound.org.
+    CC0 1.0 (`tools/music/licences/SonicPi_samples_README.md`).
+  * **Swarmandal glissandi:** luckylittleraven, freesound.org (CC0 1.0).
+  * **Santoor rolls:** batchku, freesound.org (CC0 1.0).
+  * **Shaker, tambourine, finger cymbals, bell tree and mark-tree wind chimes:** Versilian Community Sample Library
+    (VCSL), CC0 1.0 (`tools/music/licences/VCSL_LICENSE.txt`).
+  * Every file with its source URL and SHA-256: `tools/music/sources.json`.
+  * SoundFont player: spessasynth_core (Apache-2.0).
 * Fonts: Great Vibes, Cormorant Garamond, Cinzel — SIL Open Font License (see `assets/fonts/LICENSE.txt`).
 * Animation library: GSAP (free standard licence).

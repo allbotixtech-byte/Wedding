@@ -23,7 +23,8 @@ export function loadSample(file, { sr = 48000, from = 0, to = Infinity, highpass
   const attackRms = rmsOver(onset, Math.round(0.08 * sr));              // loudness of a stroke
   let bodyRms = 0;                                                        // loudness of a sweep or a ring
   for (let i = 0; i + Math.round(0.4 * sr) <= L.length; i += Math.round(0.1 * sr)) bodyRms = Math.max(bodyRms, rmsOver(i, Math.round(0.4 * sr)));
-  if (a > 0) { const f = Math.min(L.length, Math.round(0.004 * sr)); for (let i = 0; i < f; i++) { L[i] *= i / f; R[i] *= i / f; } }
+  // fade in: 4 ms on a trimmed slice; 0.3 ms otherwise, so a file that starts on a non-zero sample cannot click
+  { const f = Math.min(L.length, Math.round((a > 0 ? 0.004 : 0.0003) * sr)); for (let i = 0; i < f; i++) { L[i] *= i / f; R[i] *= i / f; } }
   if (b < src.L.length) { const f = Math.min(L.length, Math.round(0.03 * sr)); for (let i = 0; i < f; i++) { const g = i / f; L[L.length - 1 - i] *= g; R[R.length - 1 - i] *= g; } }
   const s = { L, R, len: L.length, sr, peak, onset, attackRms: attackRms || 1e-9, bodyRms: bodyRms || attackRms || 1e-9, name: path.basename(file) };
   cache.set(key, s);
@@ -207,7 +208,9 @@ export function renderSantoorRolls(SR_, groups, { N, sr = 48000 }) {
     const d = notes.reduce((a, b) => (Math.abs(b.midi - m) < Math.abs(a.midi - m) ? b : a));
     const cents = 100 * (m - d.midi) - (d.offsetCents ?? 0);
     const gain = (SR_.level ?? 0.3) * (SR_.targetRms ?? 0.1) / d.s.bodyRms * (g.vel / 127) ** 1.5 / Math.sqrt(g.midis.length);
-    place(out, d.s, { t: g.t0, gain, pan: SR_.pan ?? 0, cents, until: g.t1 - g.t0, fade: SR_.release ?? 0.6, anchor: 0, fadeIn: 0.03 });
+    // the roll dies away after its last stroke, but never rings on into a new chord (g.damp = next chord change)
+    const release = g.damp != null ? Math.min(SR_.release ?? 0.6, Math.max(0.12, g.damp - g.t1 + 0.12)) : SR_.release ?? 0.6;
+    place(out, d.s, { t: g.t0, gain, pan: SR_.pan ?? 0, cents, until: g.t1 - g.t0, fade: release, anchor: 0, fadeIn: 0.03 });
     used.push(`${g.t0.toFixed(2)}–${g.t1.toFixed(2)}s midi ${m} from ${d.file.slice(-14)} ${cents >= 0 ? '+' : ''}${cents.toFixed(0)}c`);
   }
   return { ...out, used };
