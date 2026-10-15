@@ -156,9 +156,14 @@ The originals you supplied and the lossless cut-outs are kept in `assets/source/
 
 ## 6. Music
 
-The soundtrack is an **original piece** (felt piano, strings, bansuri-style flute, chimes, swarmandal),
-synthesized by code in `tools/compose-music.mjs` — no samples and no third-party recordings, so it is free to
-share anywhere. It is timed to the picture: the harp glissandi land on the scene changes and the chimes on the names.
+The soundtrack is an **original Bollywood-style score**: a dholak keherwa groove, dhol, claps and ghungroo, bass,
+a string section, santoor, sitar, bansuri and a shehnai lead, in D major at 80 BPM. It is synthesized by code in
+`tools/compose-music.mjs` — no samples, no third-party recordings and no borrowed melodies, so it is free to share
+anywhere. It is cut to the picture: the groove drops in with the groom at 9 s, the chorus bursts open with the curtains
+at 30 s, it calms down while guests read the date and venue (39–51 s), and the final chorus ends on one big hit at 57 s.
+
+> Please do not replace it with a film song (for example from YouTube). Commercial songs are copyrighted, and because
+> this invitation is published online, the site or the repository can be taken down for it.
 
 * Regenerate / tweak it: edit the clearly marked settings at the top of `tools/compose-music.mjs`, then
   ```
@@ -272,6 +277,6 @@ tools, no renderer, no videos, and not your original artwork.
 ## Credits
 
 * Character illustrations: supplied by the couple.
-* Backgrounds, florals, decorations, animation and soundtrack: created for this invitation (code in this folder).
+* Backgrounds, florals, decorations, animation and the Bollywood-style soundtrack: created for this invitation (code in this folder).
 * Fonts: Great Vibes, Cormorant Garamond, Cinzel — SIL Open Font License (see `assets/fonts/LICENSE.txt`).
 * Animation library: GSAP (free standard licence).

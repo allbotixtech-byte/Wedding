@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 // ════════════════════════════════════════════════════════════════════════════
-//  compose-music.mjs — original soundtrack for the reception-invitation film
+//  compose-music.mjs — original Bollywood-style soundtrack for the reception film
 //
-//  Everything you hear is synthesised here from scratch (pure JS DSP, no samples,
-//  no npm dependencies, seeded → the output is bit-identical on every run).
+//  A joyful "filmi" wedding arrangement: dholak in a keherwa groove, dhol, claps and
+//  ghungroo, a round bass, a Bollywood string section, santoor, sitar, bansuri and a
+//  shehnai lead. Everything is synthesised here from scratch (pure JS DSP, no samples,
+//  no npm dependencies, seeded → bit-identical output on every run). All melodies are
+//  original.
 //
 //    node tools/compose-music.mjs                 → assets/music/reception-theme.wav + .mp3
 //    node tools/compose-music.mjs --report        → also print a per-bar level table
@@ -11,23 +14,21 @@
 //    node tools/compose-music.mjs --no-mp3        → skip the ffmpeg step
 //
 //  Layout of this file
-//    1. EDITABLE SECTION  tempo · harmony · melodies · cue sheet · mix   ← tweak here
+//    1. EDITABLE SECTION  tempo · chords · plan per bar · melodies · cue sheet · mix   ← tweak here
 //    2. DSP helpers
-//    3. Instruments       piano · strings · bansuri · swarmandal · chimes · tanpura · garden
+//    3. Instruments       strings · bansuri · shehnai · sitar · santoor · bass · dholak · dhol ·
+//                         claps · ghungroo · cymbal · swarmandal · chimes · tanpura
 //    4. Arrangement       turns section 1 into notes
 //    5. Reverb, master bus, loudness normalisation, WAV/MP3 output
 //
 //  Common tweaks (all in section 1 unless noted)
-//    a cue moved in the edit ........ GLISSANDI / CHIMES   (`at`, in seconds)
-//    different notes ................ SCORE (chords, arpeggios, pad) · PIANO_MELODY · FLUTE_PHRASES
-//    bigger / gentler climax ........ STRINGS_SWELL around 30–39 s, `vel` of bars 10–12
-//    louder / quieter calm section .. `vel` of bars 13–16, STRINGS_SWELL at 40–48 s
+//    a cue moved in the edit ........ GLISSANDI / CHIMES / CYMBALS / SITAR_STRUMS (`at`, in seconds)
+//    more / less percussion ......... PLAN (per bar: dholak, dhol, claps, jingles, bass …, 0‥1)
+//    different notes ................ CHORDS · HARMONY · BANSURI_PHRASES · SHEHNAI_PHRASES · SITAR_LINES
 //    one instrument up or down ...... MIX (dB)        wetter / drier ........ REVERB.level, MIX sends
 //    overall loudness ............... MASTER.targetLufs (the limiter keeps the peaks in check)
 //    phone-speaker tone / dynamics .. MASTER.presenceDb · bassTrimDb · ride
-//    length ......................... BARS · TAIL_SEC, then MASTER.fadeOutStart / silenceFrom and the
-//                                     last break-points of the curves (STRINGS_*, DRONE_LEVEL, MASTER.ride)
-//    instrument tone ................ the PIANO / STRINGS / FLUTE / … blocks in section 3
+//    instrument tone ................ the DHOLAK / SHEHNAI / SITAR / … blocks in section 3
 //  Run with --report after a change to see the level of every instrument bar by bar.
 // ════════════════════════════════════════════════════════════════════════════
 import { writeFileSync, mkdirSync } from 'node:fs';
@@ -38,144 +39,198 @@ import { fileURLToPath } from 'node:url';
 // ════════════════════════════════════════════════════════════════════════════
 //  1. EDITABLE SECTION
 // ════════════════════════════════════════════════════════════════════════════
-const SEED = 20261012;        // change for a different (still deterministic) "performance"
+const SEED = 20261014;        // change for a different (still deterministic) "performance"
 
 // ── Grid ────────────────────────────────────────────────────────────────────
-// 60 BPM in 3/4: 1 beat = 1.000 s, 1 bar = 3.000 s, bar k starts at t = 3k s.
-// The picture is cut to this grid, so only change it together with the edit.
+// 80 BPM in 4/4: 1 beat = 0.75 s, 1 bar = 3.000 s, bar k starts at t = 3k s.
+// Every scene change of the film is on a bar line, so only change this together with the edit.
 // The whole film has to fit one 60-second Instagram / WhatsApp story: 59.500 s in total.
-const BPM = 60;
-const BEATS_PER_BAR = 3;
-const BARS = 19;              // full bars 0‥18 (0–57 s); the last SCORE row is the final chord, struck at 57.0
+const BPM = 80;
+const BEATS_PER_BAR = 4;
+const BARS = 19;              // full bars 0‥18 (0–57 s); the last HARMONY row is the final hit, struck at 57.0
 const TAIL_SEC = 2.5;         // …which rings out for this long → 59.500 s in total (2,856,000 frames)
 
-// ── Harmony: one row per bar ────────────────────────────────────────────────
-//  arp      six eighth-notes for the piano left hand ("-" = rest). The first one is
-//           the bass note on the downbeat. "D4:0.5" = let that note ring 0.5 beat only
-//           (used for the sus4 that has to get out of the way of the 3rd).
-//  bass     optional extra low octave struck with the downbeat
-//  vel      piano touch for the accompaniment, 0‥1 (≈0.3 pp · 0.45 p · 0.55 mp · 0.65 mf · 0.8 f).
-//           It sets tone (soft = darker) more than level; the big dynamic arc comes from the
-//           strings, the flute and how many voices play.
-//  pad      string-section voicing for the bar; padBeat3 = voicing that takes over on
-//           beat 3 (sus4 → 3 resolutions). Notes shared by neighbouring bars are tied.
-const SCORE = [
-  /*  0 prelude 0–3   */ { chord: 'D drone', pad: 'D3 A3 D4' },
-  /*  1         3–6   */ { chord: 'Dadd9',  vel: 0.35, arp: 'D3 A3 E4 F#4 A4 F#4',  pad: 'D3 A3 E4 F#4' },
-  /*  2         6–9   */ { chord: 'Bm7',    vel: 0.36, arp: 'B2 F#3 D4 F#4 A4 F#4', pad: 'B2 A3 D4 F#4' },
-  /*  3         9–12  */ { chord: 'Gmaj7',  vel: 0.36, arp: 'G2 D3 B3 D4 F#4 D4',   pad: 'G2 B3 D4 F#4' },
-  /*  4        12–15  */ { chord: 'Asus4→A', vel: 0.37, arp: 'A2 E3 A3 D4:0.5 C#4 E4', pad: 'A2 A3 D4 E4', padBeat3: 'A2 A3 C#4 E4' },
-  /*  5        15–18  */ { chord: 'D/F#',   vel: 0.36, arp: 'F#2 D3 A3 D4 F#4 D4',  pad: 'F#2 A3 D4 F#4' },
-  /*  6        18–21  */ { chord: 'Gadd9',  vel: 0.37, arp: 'G2 D3 A3 B3 D4 B3',    pad: 'G2 A3 B3 D4' },
-  /*  7        21–24  */ { chord: 'Bm',     vel: 0.41, arp: 'B2 F#3 B3 D4 F#4 D4',  pad: 'B2 F#3 B3 D4 F#4' },
-  /*  8        24–27  */ { chord: 'G',      vel: 0.49, arp: 'G2 D3 B3 D4 G4 D4',    pad: 'G2 G3 B3 D4 G4' },
-  /*  9        27–30  */ { chord: 'Asus4→A', vel: 0.60, arp: 'A2 E3 A3 D4:0.5 C#4 E4', pad: 'A2 E3 A3 D4 E4 A4', padBeat3: 'A2 E3 A3 C#4 E4 A4' },
-  /* 10 CLIMAX 30–33  */ { chord: 'D',      vel: 0.56, bass: 'D2',  arp: 'D3 A3 D4 F#4 D4 A3',   pad: 'D2 D3 A3 D4 F#4 A4 D5 F#5' },
-  /* 11        33–36  */ { chord: 'A/C#',   vel: 0.56, bass: 'C#2', arp: 'C#3 A3 C#4 E4 C#4 A3', pad: 'C#3 A3 C#4 E4 A4 C#5 E5' },
-  /* 12        36–39  */ { chord: 'Bm7',    vel: 0.55, bass: 'B1',  arp: 'B2 F#3 A3 D4 F#4 D4',  pad: 'B2 F#3 A3 D4 F#4 A4 D5' },
-  /* 13 CALM   39–42  */ { chord: 'G',      vel: 0.60, arp: 'G2 D3 B3 D4 G4 -',     pad: 'G3 B3 D4' },
-  /* 14        42–45  */ { chord: 'D/F#',   vel: 0.60, arp: 'F#2 D3 A3 D4 F#4 -',   pad: 'F#3 A3 D4' },
-  /* 15        45–48  */ { chord: 'Em7',    vel: 0.60, arp: 'E2 B2 G3 B3 D4 -',     pad: 'E3 G3 B3 D4' },
-  /* 16        48–51  */ { chord: 'Asus4→A7', vel: 0.60, arp: 'A2 E3 A3 D4:0.5 C#4 G4', pad: 'E3 A3 D4 E4', padBeat3: 'E3 G3 C#4 E4' },
-  /* 17 THEME  51–54  */ { chord: 'D',      vel: 0.54, bass: 'D2', arp: 'D3 A3 D4 F#4 A4 F#4', pad: 'D3 A3 D4 F#4 A4' },
-  /* 18        54–57  */ { chord: 'G/D',    vel: 0.53, bass: 'D2', arp: 'D3 G3 B3 D4 G4 D4',   pad: 'D3 G3 B3 D4 G4' },
-  /* 19 FINAL  57–59.5 */ { chord: 'Dadd9', vel: 0.48, roll: 'D2 A2 D3 A3 E4 F#4 A4 D5',       pad: 'D3 A3 E4 F#4 A4' },
+// ── Chords (key of D) ───────────────────────────────────────────────────────
+//  bass    root for the bass line          pad / padHi  string voicing in the verses / choruses
+//  arp     four tones the santoor arpeggiates
+const CHORDS = {
+  'D':    { bass: 'D2',  pad: 'D3 A3 D4 F#4',   padHi: 'D3 A3 D4 F#4 A4 D5',   arp: 'D4 F#4 A4 D5' },
+  'A/C#': { bass: 'C#2', pad: 'C#3 A3 C#4 E4',  padHi: 'C#3 A3 C#4 E4 A4 C#5', arp: 'C#4 E4 A4 C#5' },
+  'Bm':   { bass: 'B1',  pad: 'B2 F#3 B3 D4',   padHi: 'B2 F#3 B3 D4 F#4 B4',  arp: 'B3 D4 F#4 B4' },
+  'G':    { bass: 'G1',  pad: 'G2 D3 G3 B3',    padHi: 'G2 D3 G3 B3 D4 G4',    arp: 'B3 D4 G4 B4' },
+  'A':    { bass: 'A1',  pad: 'A2 E3 A3 C#4',   padHi: 'A2 E3 A3 C#4 E4 A4',   arp: 'C#4 E4 A4 C#5' },
+  'A7':   { bass: 'A1',  pad: 'A2 E3 G3 C#4',   padHi: 'A2 E3 G3 C#4 E4 G4',   arp: 'C#4 E4 G4 A4' },
+  'Em':   { bass: 'E2',  pad: 'E3 B3 E4 G4',    padHi: 'E3 B3 E4 G4 B4 E5',    arp: 'B3 E4 G4 B4' },
+  'F#m':  { bass: 'F#2', pad: 'F#3 C#4 F#4 A4', padHi: 'F#3 C#4 F#4 A4 C#5',   arp: 'C#4 F#4 A4 C#5' },
+};
+
+// ── Harmony: one row per bar, [chord, beats] ────────────────────────────────
+const HARMONY = [
+  /*  0 intro     0–3   envelope opens    */ [['D', 4]],
+  /*  1 garden    3–6                     */ [['D', 4]],
+  /*  2           6–9                     */ [['G', 2], ['A', 2]],
+  /*  3 groom     9–12  groove drops in   */ [['D', 4]],
+  /*  4          12–15                    */ [['G', 2], ['A', 2]],
+  /*  5 bride    15–18                    */ [['Bm', 2], ['G', 2]],
+  /*  6          18–21                    */ [['Em', 2], ['A', 2]],
+  /*  7 together 21–24  build             */ [['G', 2], ['A', 2]],
+  /*  8          24–27                    */ [['Bm', 2], ['F#m', 2]],
+  /*  9          27–30  curtains          */ [['G', 2], ['A7', 2]],
+  /* 10 CHORUS   30–33  the stage         */ [['D', 2], ['A/C#', 2]],
+  /* 11          33–36                    */ [['Bm', 2], ['G', 2]],
+  /* 12          36–39                    */ [['Em', 2], ['A', 2]],
+  /* 13 card     39–42  calmer, reading   */ [['D', 4]],
+  /* 14          42–45                    */ [['G', 4]],
+  /* 15          45–48                    */ [['Bm', 2], ['G', 2]],
+  /* 16          48–51                    */ [['Em', 2], ['A7', 2]],
+  /* 17 CHORUS   51–54  finale            */ [['D', 2], ['A/C#', 2]],
+  /* 18          54–57                    */ [['G', 2], ['A', 2]],
+  /* 19 END      57–59.5 final hit        */ [['D', 4]],
+];
+
+// ── Plan: who plays in every bar (levels 0‥1) ───────────────────────────────
+//  dholak / dhol: groove level, or 'roll' (build-up into the next bar)
+//  santoor: 'shimmer' (tremolo) · 'arp16' (sixteenths) · 'arp8' (eighths)
+//  strings: 'pad' · 'high'           fill: 'pickup' · 'end' (dholak fill on beat 4)
+const CHORUS = { dholak: 1, dhol: 1, claps: 1, jingles: 1, bass: 1, strings: 'high', santoor: 'arp8', santoorVel: 0.34 };
+const CALM = { dholak: 0.55, bass: 0.62, jingles: 0.35, strings: 'pad', santoor: 'arp8', santoorVel: 0.5 };
+const PLAN = [
+  /*  0 */ { santoor: 'shimmer', strings: 'pad' },
+  /*  1 */ { santoor: 'arp16', santoorVel: 0.40, jingles: 0.3, strings: 'pad' },
+  /*  2 */ { santoor: 'arp16', santoorVel: 0.44, jingles: 0.4, strings: 'pad', fill: 'pickup' },
+  /*  3 */ { dholak: 0.82, bass: 1, jingles: 0.55, strings: 'pad', santoor: 'arp8', santoorVel: 0.36 },
+  /*  4 */ { dholak: 0.82, bass: 1, jingles: 0.55, strings: 'pad', fill: 'end' },
+  /*  5 */ { dholak: 0.82, bass: 1, jingles: 0.55, strings: 'pad', santoor: 'arp8', santoorVel: 0.36 },
+  /*  6 */ { dholak: 0.84, bass: 1, jingles: 0.6, strings: 'pad', fill: 'end' },
+  /*  7 */ { dholak: 0.9, bass: 1, claps: 0.7, jingles: 0.75, strings: 'pad' },
+  /*  8 */ { dholak: 0.94, bass: 1, claps: 0.8, jingles: 0.85, dhol: 0.55, strings: 'high' },
+  /*  9 */ { dholak: 'roll', dhol: 'roll', bass: 0.7, jingles: 0.6, strings: 'high' },
+  /* 10 */ { ...CHORUS },
+  /* 11 */ { ...CHORUS },
+  /* 12 */ { ...CHORUS, fill: 'end' },
+  /* 13 */ { ...CALM },
+  /* 14 */ { ...CALM },
+  /* 15 */ { ...CALM },
+  /* 16 */ { ...CALM, dholak: 0.7, fill: 'end' },
+  /* 17 */ { ...CHORUS },
+  /* 18 */ { ...CHORUS, fill: 'end' },
+  /* 19 */ { strings: 'high' },
 ];
 
 // ── Melodies ────────────────────────────────────────────────────────────────
-//  "F#5 A5:2 r B5" → notes are 1 beat long unless ":beats" is given, "r" = rest,
+//  "F#5 A5:2 r B5" → notes are 1 beat (0.75 s) long unless ":beats" is given, "r" = rest,
 //  "|" is only a visual bar line. `bar`/`beat` say where the line starts (beat 0 = downbeat).
-//  Almost everything is D-major pentatonic (D E F# A B = raga Bhoopali).
-const PIANO_MELODY = [
-  { bar: 3,  vel: 0.62, notes: 'F#5 A5 B5 | A5:2 F#5' },                                 // theme, first half (mp)
-  { bar: 10, vel: 0.76, octaveBelow: 0.80, notes: 'A5 B5 D6 | B5:2 A5 | F#5 A5 B5' },    // climax in octaves
-  { bar: 14, beat: 1, vel: 0.55, notes: 'A5 F#5 | E5:3' },                               // small fragment (calm)
-  { bar: 17, vel: 0.68, octaveBelow: 0.50, notes: 'F#5 A5 B5 | A5 F#5 E5' },             // warm restatement
+//  Bansuri / shehnai: one entry = one breath, notes slurred with meend; vel → velEnd = swell.
+const BANSURI_PHRASES = [
+  { bar: 0, beat: 0.25, vel: 0.40, velEnd: 0.62, notes: 'A4:0.75 D5:1.25 E5:0.5 F#5' },       // alaap while the envelope opens
+  { bar: 1, vel: 0.56, velEnd: 0.64, notes: 'D5 E5:0.5 F#5:0.5 A5:2' },                        // the garden
+  { bar: 2, vel: 0.64, velEnd: 0.56, notes: 'B5 A5:0.5 F#5:0.5 E5:1.5' },
+  { bar: 3, beat: 1, vel: 0.68, notes: 'F#5:0.5 G5:0.5 A5 F#5' },                               // verse — the groom
+  { bar: 4, vel: 0.68, notes: 'G5:0.5 F#5:0.5 E5 F#5:0.5 E5:0.5 C#5' },
+  { bar: 5, vel: 0.66, notes: 'D5 F#5:0.5 E5:0.5 D5 B4' },                                      // the bride
+  { bar: 6, vel: 0.68, velEnd: 0.6, notes: 'E5 G5:0.5 F#5:0.5 E5:1.5' },
+  { bar: 14, vel: 0.50, velEnd: 0.46, notes: 'F#5 E5 D5:2' },                                   // card: a small fragment only
+  { bar: 16, vel: 0.52, velEnd: 0.72, notes: 'E5 F#5 G5 A5' },                                  // leads into the final chorus
 ];
-// One entry = one breath. Notes inside a breath are slurred with a short meend (glide).
-// vel → velEnd is a crescendo / diminuendo across the breath.
-const FLUTE_PHRASES = [
-  { bar: 5,  vel: 0.54, velEnd: 0.60, notes: 'E5 F#5 A5 | B5:2 A5:0.8' },
-  { bar: 7,  vel: 0.58, velEnd: 0.58, notes: 'F#5:2 D5 | D5:2 B4:0.8' },
-  { bar: 9,  vel: 0.66, velEnd: 0.98, notes: 'E5:2 F#5 | A5 B5 D6 | B5:2 A5:0.8' },      // climb + lift variation
-  { bar: 12, vel: 0.92, velEnd: 0.50, notes: 'F#5 A5 B5 | A5:2.6' },                     // …settling into the calm
-  { bar: 15, beat: 1, vel: 0.50, velEnd: 0.54, notes: 'E5 F#5 | A5:2.2' },               // calm fragment, answering the piano's E5
-  { bar: 17, vel: 0.72, velEnd: 0.56, notes: 'F#5 A5 B5 | A5 F#5 E5 | D5:2.5' },         // restatement + cadence (D5 held into the fade)
+// The chorus hook (the shehnai plays with circular breathing, so a whole chorus is one breath).
+const HOOK_A = 'A4:0.5 D5:0.5 F#5:1.5 E5:0.5 D5:0.5 E5:0.5';                // D … A/C#
+const SHEHNAI_PHRASES = [
+  { bar: 10, vel: 0.80, velEnd: 0.88, notes: `${HOOK_A} | G5:0.15 F#5:0.85 G5:0.5 F#5:0.5 E5 D5 | E5:0.5 F#5:0.5 G5 F#5:0.5 E5:0.5 C#5:0.5 E5:0.5` },
+  { bar: 17, vel: 0.84, velEnd: 0.70, notes: `${HOOK_A} | B5:0.5 A5:0.5 G5:0.5 F#5:0.5 E5 C#5:0.5 E5:0.5 | E5:0.12 D5:2.8` },
+];
+// Sitar: plucked; stepwise neighbours are sometimes reached with a meend (bend) instead of a fresh pluck.
+const SITAR_LINES = [
+  { bar: 7, vel: 0.62, notes: 'B4:0.5 D5:0.5 E5 C#5:0.5 E5:0.5 A5' },                          // build-up
+  { bar: 8, vel: 0.68, notes: 'B5 A5:0.5 F#5:0.5 A5 F#5:0.5 C#5:0.5' },
+  { bar: 9, vel: 0.74, notes: 'D5:0.5 E5:0.5 G5 A5:1.5' },
+  { bar: 10, vel: 0.46, octave: -12, notes: `${HOOK_A} | F#5 G5:0.5 F#5:0.5 E5 D5 | E5:0.5 F#5:0.5 G5 F#5:0.5 E5:0.5 C#5:0.5 E5:0.5` }, // doubles the hook
+  { bar: 13, beat: 2, vel: 0.42, notes: 'A4:0.5 B4:0.5 D5' },                                   // card: answers
+  { bar: 15, vel: 0.46, notes: 'D5:0.5 E5:0.5 F#5 E5 D5' },
+  { bar: 17, vel: 0.48, octave: -12, notes: `${HOOK_A} | B5:0.5 A5:0.5 G5:0.5 F#5:0.5 E5 C#5:0.5 E5:0.5` },
 ];
 
 // ── Cue sheet (seconds, locked to picture) ──────────────────────────────────
 // Swarmandal up-glissandi: the LAST note lands exactly on `at`.
 const GLISSANDI = [
-  { at: 3.0,  length: 0.80, land: 'D6', notes: 12, level: 0.50 },
-  { at: 15.0, length: 0.65, land: 'A5', notes: 10, level: 0.55 },
-  { at: 30.0, length: 0.80, land: 'D6', notes: 16, level: 0.85 },   // the big one — curtains open
-  { at: 39.0, length: 0.60, land: 'B5', notes: 9,  level: 0.42 },
-  { at: 51.0, length: 0.70, land: 'D6', notes: 12, level: 0.66 },   // into the restatement
+  { at: 3.0,  length: 0.80, land: 'D6', notes: 12, level: 0.55 },   // the envelope has opened
+  { at: 15.0, length: 0.55, land: 'A5', notes: 8,  level: 0.40 },   // into the bride's scene
+  { at: 30.0, length: 0.80, land: 'D6', notes: 16, level: 0.85 },   // curtains open on the stage
+  { at: 39.0, length: 0.60, land: 'B5', notes: 9,  level: 0.36 },   // into the card
+  { at: 51.0, length: 0.70, land: 'D6', notes: 12, level: 0.62 },   // into the finale
 ];
 // Chime sparkles: the FIRST note starts exactly on `at`, the rest follow `gap` s apart.
 const CHIMES = [
-  { at: 4.5,  notes: 'E6',              level: 0.40 },              // soft single
-  { at: 11.0, notes: 'B5 D6 F#6 B6',    level: 0.80, gap: 0.090 },  // groom's name
-  { at: 17.0, notes: 'A5 D6 F#6 A6 D7', level: 0.80, gap: 0.085 },  // bride's name
-  { at: 32.0, notes: 'D6 F#6 A6 D7 F#7', level: 1.30, gap: 0.090 }, // couple's names
-  { at: 55.0, notes: 'D6 G6 B6 D7',     level: 1.00, gap: 0.095 },  // "Kenvi & Puru" signature
-  { at: 57.0, notes: 'D7',              level: 0.45 },              // soft single on the last chord
+  { at: 11.0, notes: 'A5 D6 F#6 A6',  level: 0.70, gap: 0.085 },  // groom's name
+  { at: 17.0, notes: 'G5 B5 D6 G6',   level: 0.70, gap: 0.085 },  // bride's name
+  { at: 32.0, notes: 'A5 C#6 E6 A6',  level: 0.95, gap: 0.085 },  // couple's names
+  { at: 55.0, notes: 'B5 D6 G6 B6',   level: 0.90, gap: 0.090 },  // "Kenvi & Puru" signature
+  { at: 57.0, notes: 'D7',            level: 0.40 },
+];
+// Cymbal: 'crash' starts on `at`; 'swell' is a reversed swell that peaks exactly on `at`.
+const CYMBALS = [
+  { at: 9.0,  kind: 'crash', level: 0.40 },
+  { at: 30.0, kind: 'swell', len: 1.4, level: 0.55 },
+  { at: 30.0, kind: 'crash', level: 0.85 },
+  { at: 51.0, kind: 'crash', level: 0.60 },
+  { at: 57.0, kind: 'crash', level: 0.85 },
+];
+// Sitar chord strums on the big downbeats (first string exactly on `at`).
+const SITAR_STRUMS = [
+  { at: 9.0,  notes: 'D4 A4 D5',          vel: 0.62 },
+  { at: 30.0, notes: 'D4 A4 D5 F#5',      vel: 0.70 },
+  { at: 51.0, notes: 'D4 A4 D5',          vel: 0.62 },
+  { at: 57.0, notes: 'D3 A3 D4 F#4 A4 D5', vel: 0.72 },
 ];
 
 // ── Dynamics over time: [seconds, dB] break-points, linear in between ───────
-// String-section swell (0 dB = full strings). It keeps rising for ~1.6 s AFTER the downbeat
-// at 30.0, so the climax blooms instead of banging.
 const STRINGS_SWELL = [
-  [0, -9], [3, -10.5], [9, -10.5], [12, -9.2], [15, -9], [21, -8.8], [24, -7.5], [27, -6.3], [29, -5.5], [30, -4],
-  [31.6, -0.5], [36, -0.8], [38.4, -2.5], [40.5, -3.8], [48, -3.8], [51, -5], [54, -4.5], [57, -6.5], [59.5, -9.5],
+  [0, -11], [3, -10], [9, -9.5], [21, -8.5], [27, -6.5], [29.3, -4.5], [30, -2.2], [31, -0.6], [38.4, -1],
+  [39.6, -5.5], [50, -5.5], [51, -1.2], [56.6, -1], [59.5, -6],
 ];
-// How open the string tone is: 0 = dark and veiled, 1 = full section. [seconds, 0‥1]
 const STRINGS_BRIGHTNESS = [
-  [0, 0.20], [9, 0.25], [15, 0.32], [21, 0.40], [27, 0.62], [30, 0.80], [31.6, 1.0], [36, 0.95],
-  [39, 0.60], [41, 0.28], [48, 0.30], [51, 0.55], [57, 0.50], [59.5, 0.38],
+  [0, 0.30], [9, 0.40], [21, 0.50], [29, 0.75], [30, 0.90], [31, 1.0], [38.4, 0.95], [39.6, 0.45], [50, 0.5], [51, 0.95], [59.5, 0.6],
 ];
-// Tanpura-like drone on D/A: prelude colour, gone by bar 5, a hint again under the ending (≈49–59 s).
-// (In these two curves −60 dB means "off".)
-const DRONE_LEVEL = [[0, 2], [3, 0], [6, -1], [10, -6], [15, -60], [49, -60], [52, -7], [58, -7], [59.5, -14]];
-// Evening-garden bed (breeze + sparse crickets): in over the first second, gone by ~10.5 s.
-// Its absolute level is GARDEN.level in section 3 — it sits ≥ 25 dB under the music.
-const GARDEN_LEVEL = [[0, -60], [0.8, 0], [8.6, 0], [10.4, -60]];
+// Tanpura-like drone on D/A for the intro and under the very end (−60 dB = off).
+const DRONE_LEVEL = [[0, 0], [3, -1], [8, -5], [10, -60], [56, -60], [57, -6], [59.5, -10]];
 
 // ── Mix: fader (dB, 0 = as balanced) and reverb send (dB) per instrument ────
 // Whatever you change here, the master stage re-normalises the result to MASTER.targetLufs.
 const MIX = {
-  piano:      { gain: 0.0,   send: -9.5 },
-  strings:    { gain: 0.0,   send: -7.0 },
-  flute:      { gain: 0.0,   send: -6.0 },
-  swarmandal: { gain: 0.0,   send: -5.0 },
-  chimes:     { gain: 0.0,   send: -5.0 },
-  drone:      { gain: 0.0,   send: -9.0 },
-  garden:     { gain: 0.0,   send: -60 },
+  strings:    { gain: 0.0, send: -7.0 },
+  flute:      { gain: 0.0, send: -6.5 },   // bansuri
+  shehnai:    { gain: 0.0, send: -8.0 },
+  sitar:      { gain: 0.0, send: -9.0 },
+  santoor:    { gain: 0.0, send: -9.0 },
+  bass:       { gain: 0.0, send: -60 },
+  dholak:     { gain: 0.0, send: -15 },
+  dhol:       { gain: 0.0, send: -17 },
+  claps:      { gain: 0.0, send: -9.0 },
+  jingles:    { gain: 0.0, send: -11 },
+  cymbal:     { gain: 0.0, send: -12 },
+  swarmandal: { gain: 0.0, send: -5.0 },
+  chimes:     { gain: 0.0, send: -5.0 },
+  drone:      { gain: 0.0, send: -9.0 },
 };
 const REVERB = {
-  decaySec: 2.6,              // 60 dB decay of the lows/low-mids (≈2.1 s at 1 kHz, ≈1 s at 4 kHz)
-  hfDamping: 0.16,            // decay at the very top relative to the bottom — smaller = darker tail
-  preDelayMs: 22,
-  inputHighpassHz: 150,       // keeps bass notes out of the hall (no mud)
-  level: 0.0,                 // return level in dB
+  decaySec: 2.0,              // 60 dB decay of the lows/low-mids — tighter than a ballad, the groove stays clear
+  hfDamping: 0.16,
+  preDelayMs: 18,
+  inputHighpassHz: 180,       // keeps drums and bass out of the hall (no mud)
+  level: 0.0,
 };
 
 // ── Master ──────────────────────────────────────────────────────────────────
 const MASTER = {
   targetLufs: -16.0,          // integrated loudness (ITU-R BS.1770)
   ceilingDb: -2.0,            // limiter ceiling (sample peak) → true peak stays under −1.5 dBTP, MP3 included
-  fadeInSec: 1.5,
-  fadeOutStart: 58.0,         // final fade begins (1 s after the last chord is struck at 57.0)
+  fadeInSec: 0.4,
+  fadeOutStart: 58.0,         // final fade begins (1 s after the final hit at 57.0)
   silenceFrom: 59.2,          // digital silence from here to the end at 59.5
-  highpassHz: 28,
-  // Tone control for small (phone) speakers: lift the presence/air region a little and ease the deep bass.
-  // Set both to 0 for the original, darker balance.
-  presenceDb: 5.0, presenceHz: 2300,
-  bassTrimDb: -2.5, bassTrimHz: 110,
-  // Level ride [seconds, dB]: lifts the hushed opening and the calm card section so they are still heard on a
-  // phone, while the reveal at 30 s stays the loudest moment. Use [[0, 0], [59.5, 0]] for the full dynamic range
-  // (without the ride the calm section, 39–51 s, sits about 5–6 LU under the climax).
-  ride: [[0, 5.5], [8, 5], [15, 3.5], [21, 2.5], [27, 1], [30, 0], [38.4, 0], [41, 2.2], [49, 2.2], [51.5, 0.6], [56, 1], [59.5, 1.5]],
+  highpassHz: 30,
+  presenceDb: 3.0, presenceHz: 2500,   // tone control for small (phone) speakers
+  bassTrimDb: -1.5, bassTrimHz: 100,
+  // Level ride [seconds, dB]: keeps the soft intro and the card section present on a phone.
+  ride: [[0, 0], [38.6, 0], [40, 1.0], [50.4, 1.0], [51, 0], [59.5, 0]],
 };
 
 // ── Output ──────────────────────────────────────────────────────────────────
@@ -315,7 +370,7 @@ function filter(x, c) {
 /**
  * out[start…] += amp · e^(−rate·t) · sin(2πft + phase), as a rotating phasor (no Math.sin
  * in the loop). Stops once the partial has decayed by 90 dB. This is the workhorse behind
- * the piano and the chimes.
+ * the chimes, the jingles and the sitar's sympathetic strings.
  */
 function addDampedSine(out, start, len, f, amp, rate, phase = 0) {
   const w = TAU * f / SR, r = Math.exp(-rate / SR);
@@ -330,63 +385,12 @@ function addDampedSine(out, start, len, f, amp, rate, phase = 0) {
   }
 }
 
+
 // ════════════════════════════════════════════════════════════════════════════
 //  3. INSTRUMENTS
 // ════════════════════════════════════════════════════════════════════════════
-
-// ── Felt piano ──────────────────────────────────────────────────────────────
-// Additive: stretched (slightly inharmonic) partials, two strings per note a hair apart
-// in pitch (slow beating + the piano's two-stage decay), highs dying first.
-const PIANO = {
-  level: 0.19,
-  velCurve: 0.75,                       // loudness ∝ vel^velCurve
-  tilt: 1.15,                           // partial k starts at k^−tilt …
-  brightBaseHz: 520, brightVelHz: 2100, // … and is rolled off 12 dB/oct above base + vel·… Hz (soft felt tone)
-  maxPartials: 22, maxFreq: 8000,
-  decayBase: 0.45, decayPerHz: 1 / 640, // decay rate (1/s) of a partial at f Hz = base + f·perHz
-  attackMs: 6, attackSoftMs: 10,        // softer notes speak more slowly
-  releaseSec: 0.22,                     // damper
-  detuneCents: 0.9,
-  width: 0.14,                          // stereo distance between the two strings
-};
 const scratchA = new Float64Array(SR * 16);
 const scratchB = new Float64Array(SR * 16);
-
-function pianoNote(bus, rng, tOn, midi, vel, tOff) {
-  const i0 = Math.round(tOn * SR);
-  if (i0 < 0 || i0 >= N) return;
-  const f0 = hz(midi);
-  const inharm = Math.max(8e-5, 3.5e-4 * 2 ** ((midi - 60) * 1.1 / 12));
-  const bright = PIANO.brightBaseHz + PIANO.brightVelHz * vel;
-  const hold = Math.max(0.05, tOff - tOn);
-  const len = Math.min(N - i0, scratchA.length, Math.ceil((hold + 8 * PIANO.releaseSec) * SR));
-  scratchA.fill(0, 0, len);
-  scratchB.fill(0, 0, len);
-  const cents = PIANO.detuneCents * (0.6 + 0.8 * rng());
-  const detA = 2 ** (-cents / 1200), detB = 2 ** (cents / 1200);
-  const amp = PIANO.level * vel ** PIANO.velCurve * 2 ** ((60 - midi) / 12 * 0.10);
-  for (let k = 1; k <= PIANO.maxPartials; k++) {
-    const fk = k * f0 * Math.sqrt((1 + inharm * k * k) / (1 + inharm));
-    if (fk > PIANO.maxFreq) break;
-    const a = amp * k ** -PIANO.tilt / (1 + (fk / bright) ** 2) * (0.8 + 0.4 * rng());
-    const rate = PIANO.decayBase + fk * PIANO.decayPerHz;
-    const ph = k === 1 ? 0 : (rng() - 0.5) * 1.6;
-    addDampedSine(scratchA, 0, len, fk * detA, a * 0.62, rate * 1.45, ph);                     // prompt sound
-    addDampedSine(scratchB, 0, len, fk * detB, a * 0.38, rate * 0.72, ph + (rng() - 0.5) * 0.8); // after-sound
-  }
-  const attN = Math.max(8, Math.round((PIANO.attackMs + PIANO.attackSoftMs * (1 - vel)) * SR / 1000));
-  const iOff = Math.round(hold * SR);
-  const relK = Math.exp(-1 / (PIANO.releaseSec * SR));
-  const pan = clamp((midi - 58) / 90, -0.22, 0.25);   // bass a little left, treble a little right (player's view)
-  const [aL, aR] = panGains(pan - PIANO.width), [bL, bR] = panGains(pan + PIANO.width);
-  let rel = 1;
-  for (let i = 0; i < len; i++) {
-    let e = i < attN ? 0.5 - 0.5 * Math.cos(Math.PI * i / attN) : 1;
-    if (i > iOff) { rel *= relK; e *= rel; }
-    bus.L[i0 + i] += (scratchA[i] * aL + scratchB[i] * bL) * e;
-    bus.R[i0 + i] += (scratchA[i] * aR + scratchB[i] * bR) * e;
-  }
-}
 
 // ── String pad ──────────────────────────────────────────────────────────────
 // Each note = a small section of detuned "players". Every player is a saw spectrum built
@@ -394,7 +398,7 @@ function pianoNote(bus, rng, tOn, midi, vel, tOff) {
 // aliasing) and with its own random harmonic phases (no peaky, buzzy saw waveform). There
 // is a dark and a bright table per player; STRINGS_BRIGHTNESS cross-fades between them.
 const STRINGS = {
-  level: 0.067,
+  level: 0.040,
   voices: 6, detuneCents: 10, spread: 0.8,
   darkHz: 620, brightHz: 1900,          // low-pass corner (12 dB/oct) at brightness 0 / 1, for the A3 string
   keytrack: 0.2,                        // corner follows pitch a little (cellos darker than violins)
@@ -466,37 +470,28 @@ function stringNote(bus, rng, tOn, tOff, midi, weight = 1, quickIn = false, quic
   }
 }
 
-// ── Bansuri-like flute ──────────────────────────────────────────────────────
-// One continuous pitch curve per breath: notes are joined by short glides (meend),
-// vibrato arrives late on each note, and a little band-passed breath rides on top.
-const FLUTE = {
-  level: 0.15,
-  harmonics: [1, 0.26, 0.10, 0.04, 0.016],   // partials 1‥5 at full breath (fundamental-heavy)
-  breathLevel: 0.09, chiffLevel: 0.22, breathHz: 2300,
-  attackSec: 0.08, releaseSec: 0.22, leadSec: 0.03,
-  glideSec: 0.11,                            // meend length for a whole-tone step (wider steps take longer)
-  scoopSemitones: 0.5, scoopSec: 0.11,       // each breath slides up into its first note from just below
-  vibratoHz: 5.0, vibratoCents: 13, vibratoDelaySec: 0.32, vibratoRampSec: 0.45,
-  pan: 0,
-};
+
+// ── Breath-driven leads: shared phrasing ────────────────────────────────────
+// One continuous pitch curve per breath: notes are joined by short glides (meend), vibrato
+// arrives late on each note, the breath scoops up into its first note. Used by the bansuri
+// and the shehnai, which differ only in their tone generators below.
 const LN2_12 = Math.LN2 / 12;
 const smoothstep = (x) => { x = clamp(x, 0, 1); return x * x * (3 - 2 * x); };
 
-/** notes: [{ t, dur, midi }] back to back = one breath; vel0 → vel1 across it. */
-function flutePhrase(bus, rng, notes, vel0, vel1) {
+/** notes: [{ t, dur, midi }] back to back = one breath → per-sample pitch / envelope / vibrato curves. */
+function phraseControl(notes, vel0, vel1, P) {
   const first = notes[0], last = notes[notes.length - 1];
-  const tA = first.t - FLUTE.leadSec, tB = last.t + last.dur;
+  const tA = first.t - P.leadSec, tB = last.t + last.dur;
   const i0 = Math.max(0, Math.round(tA * SR));
-  const len = Math.min(N - i0, Math.ceil((tB - tA + FLUTE.releaseSec + 0.05) * SR));
-  if (len <= 0) return;
+  const len = Math.min(N - i0, Math.ceil((tB - tA + P.releaseSec + 0.05) * SR));
+  if (len <= 0) return null;
   const pitch = new Float32Array(len), env = new Float32Array(len);
   const vib = new Float32Array(len), chiff = new Float32Array(len);
-  // how each note is reached: glide from the previous pitch, or a soft re-tongue if the pitch repeats
   const reach = notes.map((nt, j) => {
     if (j === 0) return null;
     const step = Math.abs(nt.midi - notes[j - 1].midi);
     if (step === 0) return { same: true, from: nt.t };
-    const g = clamp(FLUTE.glideSec * (1 + 0.1 * (step - 2)), 0.08, 0.2);
+    const g = clamp(P.glideSec * (1 + 0.1 * (step - 2)), 0.06, 0.2);
     return { same: false, from: nt.t - 0.45 * g, len: g };
   });
   const DIP = 0.06;
@@ -506,7 +501,7 @@ function flutePhrase(bus, rng, notes, vel0, vel1) {
     while (j + 1 < notes.length && t >= reach[j + 1].from) j++;
     const nt = notes[j], r = reach[j], next = reach[j + 1];
     let p = nt.midi, e = 1;
-    if (j === 0) p -= FLUTE.scoopSemitones * (1 - smoothstep((t - tA) / FLUTE.scoopSec));
+    if (j === 0) p -= P.scoopSemitones * (1 - smoothstep((t - tA) / P.scoopSec));
     if (r && !r.same) {
       const x = (t - r.from) / r.len;
       if (x < 1) {
@@ -518,16 +513,34 @@ function flutePhrase(bus, rng, notes, vel0, vel1) {
     if (next && next.same && next.from - t < DIP) e *= 1 - 0.7 * Math.cos(0.5 * Math.PI * (next.from - t) / DIP) ** 2;
     const tn = t - nt.t;
     if (nt.dur >= 1.5) e *= 1 + 0.08 * Math.sin(Math.PI * clamp(tn / nt.dur, 0, 1));   // long notes bloom a little
-    const ta = (t - tA) / FLUTE.attackSec;
+    const ta = (t - tA) / P.attackSec;
     if (ta < 1) e *= Math.sin(0.5 * Math.PI * Math.max(0, ta)) ** 2;
-    const tr = (t - (tB - 0.04)) / FLUTE.releaseSec;
+    const tr = (t - (tB - 0.04)) / P.releaseSec;
     if (tr > 0) e *= Math.cos(0.5 * Math.PI * Math.min(1, tr)) ** 2;
     const vel = vel0 + (vel1 - vel0) * clamp((t - first.t) / (tB - first.t), 0, 1);
     pitch[i] = p;
     env[i] = e * vel;
-    vib[i] = clamp((tn - FLUTE.vibratoDelaySec) / FLUTE.vibratoRampSec, 0, 1) * (nt.dur >= 0.9 ? 1 : 0.4);
+    vib[i] = clamp((tn - P.vibratoDelaySec) / P.vibratoRampSec, 0, 1) * (nt.dur >= 0.6 ? 1 : 0.4);
     chiff[i] = vel * Math.exp(-Math.max(0, t - tA) / 0.045) * Math.min(1, Math.max(0, ta) * 4);
   }
+  return { i0, len, pitch, env, vib, chiff };
+}
+
+// ── Bansuri ─────────────────────────────────────────────────────────────────
+// Sine-heavy tone, a little band-passed breath on top.
+const FLUTE = {
+  level: 0.15,
+  harmonics: [1, 0.26, 0.10, 0.04, 0.016],   // partials 1‥5 at full breath (fundamental-heavy)
+  breathLevel: 0.09, chiffLevel: 0.22, breathHz: 2300,
+  attackSec: 0.08, releaseSec: 0.22, leadSec: 0.03,
+  glideSec: 0.11, scoopSemitones: 0.5, scoopSec: 0.11,
+  vibratoHz: 5.0, vibratoCents: 13, vibratoDelaySec: 0.32, vibratoRampSec: 0.45,
+  pan: -0.08,
+};
+function flutePhrase(bus, rng, notes, vel0, vel1) {
+  const c = phraseControl(notes, vel0, vel1, FLUTE);
+  if (!c) return;
+  const { i0, len, pitch, env, vib, chiff } = c;
   const H = FLUTE.harmonics;
   const tone = new Float32Array(len), noise = new Float32Array(len);
   const kVib = 1 - Math.exp(-1 / (0.04 * SR)), kEnv = 1 - Math.exp(-1 / (0.004 * SR));
@@ -537,8 +550,8 @@ function flutePhrase(bus, rng, notes, vel0, vel1) {
   for (let i = 0; i < len; i++) {
     vv += (vib[i] - vv) * kVib;
     ee += (env[i] - ee) * kEnv;
-    drift += (rng() - 0.5 - drift) * kDrift;       // slow pitch wander, ≈ ±4 cents
-    wobble += (rng() - 0.5 - wobble) * kAmp;       // breath-pressure flutter, ≈ ±4 %
+    drift += (rng() - 0.5 - drift) * kDrift;
+    wobble += (rng() - 0.5 - wobble) * kAmp;
     vph += vibInc;
     const vs = Math.sin(vph);
     const cents = FLUTE.vibratoCents * vv * vs + drift * 2000;
@@ -551,14 +564,362 @@ function flutePhrase(bus, rng, notes, vel0, vel1) {
     tone[i] = s * a;
     noise[i] = (rng() * 2 - 1) * (a * FLUTE.breathLevel + chiff[i] * FLUTE.chiffLevel);
   }
-  filter(noise, biquad('bandpass', FLUTE.breathHz, 0.7));   // airy band around breathHz …
-  const air = biquad('lowpass', 2.2 * FLUTE.breathHz);      // … with nothing left above ~8 kHz
+  filter(noise, biquad('bandpass', FLUTE.breathHz, 0.7));
+  const air = biquad('lowpass', 2.2 * FLUTE.breathHz);
   filter(filter(noise, air), air);
   const [gL, gR] = panGains(FLUTE.pan);
   for (let i = 0; i < len; i++) {
     const s = (tone[i] + noise[i]) * FLUTE.level;
     bus.L[i0 + i] += s * gL;
     bus.R[i0 + i] += s * gR;
+  }
+}
+
+// ── Shehnai ─────────────────────────────────────────────────────────────────
+// Double reed: a full harmonic series shaped by fixed formants (≈1.2 kHz and ≈2.7 kHz give
+// the nasal "wedding" colour), quicker and wider vibrato than the flute, brighter when louder.
+// Rendered additively (band-limited by construction, rolled off above ~5 kHz) so it stays smooth.
+const SHEHNAI = {
+  level: 0.085,
+  formants: [[1180, 360, 1.0], [2700, 520, 0.55], [4000, 700, 0.15]],   // [centre Hz, width Hz, gain]
+  floor: 0.10, tilt: 0.55, rolloffHz: 4800, maxFreq: 7200, maxHarmonics: 26,
+  pressureBright: 0.10,          // louder → upper harmonics come up
+  breathLevel: 0.018, breathHz: 3000,
+  attackSec: 0.05, releaseSec: 0.14, leadSec: 0.02,
+  glideSec: 0.085, scoopSemitones: 0.9, scoopSec: 0.085,
+  vibratoHz: 6.0, vibratoCents: 20, vibratoDelaySec: 0.20, vibratoRampSec: 0.30,
+  pan: 0.04,
+};
+function shehnaiSpectrum(f, press, out) {
+  const S = SHEHNAI;
+  let power = 0;
+  for (let k = 1; k <= S.maxHarmonics; k++) {
+    const fk = k * f;
+    if (fk > S.maxFreq) { out[k] = 0; continue; }
+    let g = S.floor;
+    for (const [fc, bw, gain] of S.formants) g += gain * Math.exp(-0.5 * ((fk - fc) / bw) ** 2);
+    const a = g * k ** -S.tilt / (1 + (fk / S.rolloffHz) ** 4) * press ** (S.pressureBright * (k - 1));
+    out[k] = a;
+    power += a * a / 2;
+  }
+  const norm = 1 / Math.sqrt(Math.max(power, 1e-9));   // same loudness on every pitch
+  for (let k = 1; k <= S.maxHarmonics; k++) out[k] *= norm;
+}
+function shehnaiPhrase(bus, rng, notes, vel0, vel1) {
+  const S = SHEHNAI, c = phraseControl(notes, vel0, vel1, S);
+  if (!c) return;
+  const { i0, len, pitch, env, vib, chiff } = c;
+  const tone = new Float32Array(len), noise = new Float32Array(len);
+  const amps = new Float64Array(S.maxHarmonics + 1);
+  const kVib = 1 - Math.exp(-1 / (0.03 * SR)), kEnv = 1 - Math.exp(-1 / (0.004 * SR));
+  const kDrift = 1 - Math.exp(-1 / (0.3 * SR)), kAmp = 1 - Math.exp(-1 / (0.06 * SR));
+  const vibInc = TAU * S.vibratoHz * (0.97 + 0.06 * rng()) / SR;
+  let ph = 0, vph = rng() * TAU, vv = 0, ee = 0, drift = 0, wobble = 0, f = 440;
+  for (let i = 0; i < len; i++) {
+    vv += (vib[i] - vv) * kVib;
+    ee += (env[i] - ee) * kEnv;
+    drift += (rng() - 0.5 - drift) * kDrift;
+    wobble += (rng() - 0.5 - wobble) * kAmp;
+    vph += vibInc;
+    const vs = Math.sin(vph);
+    const cents = S.vibratoCents * vv * vs + drift * 1200;
+    f = 440 * Math.exp((pitch[i] - 69 + cents / 100) * LN2_12);
+    ph += TAU * f / SR;
+    if (ph > TAU) ph -= TAU;
+    const a = ee * (1 + wobble * 8);
+    if ((i & 31) === 0) shehnaiSpectrum(f, clamp(a / 0.75, 0.35, 1.2), amps);
+    // Σ a_k·sin(k·ph) with the Chebyshev recursion (one sin and one cos per sample)
+    const c2 = 2 * Math.cos(ph);
+    let sPrev = 0, sCur = Math.sin(ph), sum = 0;
+    for (let k = 1; k <= S.maxHarmonics; k++) {
+      if (amps[k] === 0) break;
+      sum += amps[k] * sCur;
+      const sNext = c2 * sCur - sPrev; sPrev = sCur; sCur = sNext;
+    }
+    tone[i] = sum * a;
+    noise[i] = (rng() * 2 - 1) * (a * S.breathLevel + chiff[i] * 0.05);
+  }
+  filter(noise, biquad('bandpass', S.breathHz, 0.8));
+  const [gL, gR] = panGains(S.pan);
+  for (let i = 0; i < len; i++) {
+    const s = (tone[i] + noise[i]) * S.level;
+    bus.L[i0 + i] += s * gL;
+    bus.R[i0 + i] += s * gR;
+  }
+}
+
+// ── Sitar ───────────────────────────────────────────────────────────────────
+// Additive pluck with the jawari "buzz": right after the pluck a bright band of harmonics sweeps
+// down the series (the same idea as the tanpura, only faster and brighter). Supports a meend — the
+// note can be bent in from a neighbouring pitch. A faint sympathetic shimmer (tarab) rings along.
+const SITAR = {
+  level: 0.26,
+  maxFreq: 6000, tilt: 0.7, sweepSec: 0.22, bandWidth: 1.4,
+  ringSec: 2.2, decayBase: 1.5, decayPerHarmonic: 0.11,
+  glideSec: 0.10, glideDelaySec: 0.025,
+  tarab: 0.035, tarabNotes: 'D5 A4 D4', tarabSec: 1.8,
+  pan: 0.22,
+};
+function sitarNote(bus, rng, tOn, midi, vel, durSec, fromMidi = null) {
+  const i0 = Math.round(tOn * SR);
+  if (i0 < 0 || i0 >= N) return;
+  const len = Math.min(N - i0, Math.ceil(Math.min(SITAR.ringSec, durSec + 0.9) * SR));
+  const f0 = hz(midi), K = Math.max(1, Math.floor(SITAR.maxFreq / f0));
+  const BLOCK = 64, out = scratchA;
+  out.fill(0, 0, len);
+  const fadeN = Math.round(0.08 * SR);
+  const ratioAt = (t) => {   // pitch (as a frequency ratio to the target) during the meend
+    if (fromMidi === null) return 1;
+    const x = smoothstep((t - SITAR.glideDelaySec) / SITAR.glideSec);
+    return 2 ** ((fromMidi - midi) * (1 - x) / 12);
+  };
+  const ampAt = (k, t) => {
+    const centre = 2 + 0.8 * K * Math.exp(-t / SITAR.sweepSec);
+    const band = 0.3 + Math.exp(-0.5 * ((k - centre) / (SITAR.bandWidth + 0.12 * K)) ** 2);
+    const att = Math.min(1, t / 0.0015);
+    return k ** -SITAR.tilt * band * att * Math.exp(-t * (SITAR.decayBase + SITAR.decayPerHarmonic * k));
+  };
+  const amp = vel * SITAR.level / Math.sqrt(K * 0.35 + 1);
+  for (let k = 1; k <= K; k++) {
+    let x = 0, y = 0;
+    const p = rng() * TAU; x = Math.cos(p); y = Math.sin(p);
+    for (let b = 0; b < len; b += BLOCK) {
+      const t = b / SR, end = Math.min(len, b + BLOCK);
+      const w = TAU * k * f0 * ratioAt(t) / SR, c = Math.cos(w), s = Math.sin(w);
+      let a = ampAt(k, t) * amp;
+      const a2 = ampAt(k, end / SR) * amp, da = (a2 - a) / (end - b);
+      if (a < 1e-6 && a2 < 1e-6 && t > 0.05) break;
+      for (let i = b; i < end; i++) {
+        out[i] += y * a;
+        const nx = x * c - y * s; y = x * s + y * c; x = nx;
+        a += da;
+      }
+    }
+  }
+  // tarab: sympathetic strings, tuned to the raga, answer every pluck very quietly
+  for (const m of noteList(SITAR.tarabNotes)) {
+    const close = Math.abs(((midi - m) % 12 + 12) % 12) === 0 ? 1 : 0.35;
+    addDampedSine(out, Math.round(0.004 * SR), len - Math.round(0.004 * SR), hz(m), amp * SITAR.tarab * close, 6.91 / SITAR.tarabSec, rng() * TAU);
+  }
+  const [gL, gR] = panGains(SITAR.pan);
+  for (let i = 0; i < len; i++) {
+    const e = i > len - fadeN ? (len - i) / fadeN : 1;
+    bus.L[i0 + i] += out[i] * e * gL;
+    bus.R[i0 + i] += out[i] * e * gR;
+  }
+}
+
+// ── Santoor (hammered dulcimer) ─────────────────────────────────────────────
+// Karplus–Strong courses (the swarmandal's string model), struck brighter and closer to the
+// bridge, with a shorter ring; every course has two strings a few cents apart.
+const SANTOOR = {
+  level: 0.128,
+  ringSec: 1.7, hfDecayHz: 3000, hfDecayRate: 3.2,
+  pickPos: 0.12, pickSoftHz: 6200,
+  chorusCents: 5, chorusLevel: 0.7,
+};
+function santoorNote(bus, rng, tOn, midi, vel, pan) {
+  const i0 = Math.round(tOn * SR);
+  if (i0 < 0 || i0 >= N) return;
+  const len = Math.min(N - i0, Math.ceil((SANTOOR.ringSec + 0.4) * SR));
+  ksString(scratchA, len, hz(midi), rng, SANTOOR);
+  ksString(scratchB, len, hz(midi) * 2 ** (SANTOOR.chorusCents / 1200), rng, SANTOOR);
+  const [aL, aR] = panGains(pan - 0.06), [bL, bR] = panGains(pan + 0.06);
+  const a = vel * SANTOOR.level, b = a * SANTOOR.chorusLevel;
+  const fadeIn = 24, fadeOut = Math.round(0.2 * SR);
+  for (let i = 0; i < len; i++) {
+    let e = i < fadeIn ? i / fadeIn : 1;
+    if (i > len - fadeOut) e *= (len - i) / fadeOut;
+    bus.L[i0 + i] += (scratchA[i] * a * aL + scratchB[i] * b * bL) * e;
+    bus.R[i0 + i] += (scratchA[i] * a * aR + scratchB[i] * b * bR) * e;
+  }
+}
+
+// ── Bass ────────────────────────────────────────────────────────────────────
+// Round, plucked filmi bass: a few harmonics (so it still reads on phone speakers), quick
+// attack, a decay towards a held level, short release.
+const BASS = {
+  level: 0.107,
+  harmonics: [1, 0.55, 0.24, 0.09, 0.035],
+  attackSec: 0.005, decaySec: 0.22, sustain: 0.55, releaseSec: 0.06,
+};
+function bassNote(bus, tOn, durSec, midi, vel) {
+  const i0 = Math.round(tOn * SR);
+  if (i0 < 0 || i0 >= N) return;
+  const len = Math.min(N - i0, Math.ceil((durSec + BASS.releaseSec * 6) * SR));
+  const f0 = hz(midi), offN = Math.round(durSec * SR);
+  const attN = BASS.attackSec * SR, kDec = Math.exp(-1 / (BASS.decaySec * SR)), kRel = Math.exp(-1 / (BASS.releaseSec * SR));
+  const H = BASS.harmonics;
+  const w = TAU * f0 / SR, c = Math.cos(w), s = Math.sin(w);
+  let x = 1, y = 0, dec = 1, rel = 1;
+  const amp = BASS.level * vel;
+  for (let i = 0; i < len; i++) {
+    let e = i < attN ? i / attN : BASS.sustain + (1 - BASS.sustain) * dec;
+    if (i >= attN) dec *= kDec;
+    if (i > offN) { rel *= kRel; e *= rel; }
+    // harmonics from the fundamental phasor: sin(kθ) via Chebyshev recursion
+    const c2 = 2 * x;
+    let sPrev = 0, sCur = y, v = 0;
+    for (let k = 0; k < H.length; k++) { v += H[k] * sCur; const sNext = c2 * sCur - sPrev; sPrev = sCur; sCur = sNext; }
+    const out = v * e * amp;
+    bus.L[i0 + i] += out;
+    bus.R[i0 + i] += out;
+    const nx = x * c - y * s; y = x * s + y * c; x = nx;
+  }
+}
+
+// ── Drum helpers ────────────────────────────────────────────────────────────
+/** A struck membrane: partials [ratio, level, t60 s] over a fundamental that glides down from f0·(1+glide). */
+function membraneHit(out, start, f0, glide, glideSec, partials, amp, rng) {
+  if (start < 0 || start >= out.length) return;
+  for (const [ratio, level, t60] of partials) {
+    if (ratio * f0 > 12000) continue;
+    const len = Math.min(out.length - start, Math.ceil(t60 * 1.2 * SR));
+    const r = Math.exp(-6.91 / (t60 * SR)), rg = Math.exp(-1 / (glideSec * SR));
+    let e = amp * level, g = glide, ph = rng() * 0.3;
+    const rampN = 40;
+    for (let i = 0; i < len; i++) {
+      ph += TAU * ratio * f0 * (1 + g) / SR;
+      out[start + i] += e * Math.sin(ph) * (i < rampN ? i / rampN : 1);
+      e *= r; g *= rg;
+    }
+  }
+}
+/** A short burst of filtered noise with an exponential decay. */
+function noiseHit(out, start, rng, amp, decaySec, filters, maxSec = 0.15) {
+  if (start < 0 || start >= out.length) return;
+  const len = Math.min(out.length - start, Math.ceil(Math.min(maxSec, decaySec * 8) * SR));
+  const x = new Float64Array(len), r = Math.exp(-1 / (decaySec * SR));
+  let e = amp;
+  for (let i = 0; i < len; i++) { x[i] = (rng() * 2 - 1) * e; e *= r; }
+  for (const f of filters) filter(x, f);
+  for (let i = 0; i < len; i++) out[start + i] += x[i];
+}
+// glue = soft saturation ceiling: the loudest transients are rounded off (tanh) so the drums sit up front
+// without the master limiter having to squash them; quiet strokes pass untouched.
+const monoToBus = (mono, bus, pan, glue = 0) => {
+  const [gL, gR] = panGains(pan);
+  for (let n = 0; n < N; n++) {
+    const v = glue ? glue * Math.tanh(mono[n] / glue) : mono[n];
+    bus.L[n] += v * gL; bus.R[n] += v * gR;
+  }
+};
+
+// ── Dholak ──────────────────────────────────────────────────────────────────
+// Two heads: the bass head ("ge") is a low thump that glides down in pitch; the treble head
+// ("na", "tin") rings with near-harmonic overtones and a small slap; "ka" is a closed slap.
+const DHOLAK = {
+  level: 0.55, pan: -0.12, glue: 0.40,
+  bass: { f: 112, glide: 0.32, glideSec: 0.035, partials: [[1, 1, 0.30], [1.58, 0.28, 0.11], [2.13, 0.12, 0.07], [2.71, 0.05, 0.05]], thump: 0.30 },
+  na:   { f: 430, partials: [[1, 1, 0.17], [2, 0.48, 0.11], [3, 0.26, 0.08], [4, 0.12, 0.06], [5.02, 0.05, 0.045]], slap: 0.20 },
+  tin:  { f: 505, partials: [[1, 1, 0.34], [2, 0.30, 0.20], [3, 0.10, 0.12]], slap: 0.08 },
+  ka:   { f: 300, partials: [[1, 0.45, 0.035], [1.7, 0.25, 0.03]], slap: 0.50 },
+};
+const F_SLAP = [biquad('bandpass', 3200, 1.1)];
+const F_KA = [biquad('bandpass', 1800, 1.2)];
+const F_THUMP = [biquad('lowpass', 380), biquad('lowpass', 380)];
+function dholakStroke(mono, rng, t, stroke, vel, bassScale = 1) {
+  const D = DHOLAK, i0 = Math.round(t * SR), a = vel * D.level;
+  const bass = (v) => {
+    membraneHit(mono, i0, D.bass.f * (0.98 + 0.04 * rng()), D.bass.glide, D.bass.glideSec, D.bass.partials, a * v * bassScale, rng);
+    noiseHit(mono, i0, rng, a * v * bassScale * D.bass.thump, 0.006, F_THUMP, 0.05);
+  };
+  const head = (h, v) => {
+    membraneHit(mono, i0, h.f * (0.99 + 0.02 * rng()), 0.02, 0.01, h.partials, a * v, rng);
+    noiseHit(mono, i0, rng, a * v * h.slap, 0.004, h === D.ka ? F_KA : F_SLAP, 0.04);
+  };
+  switch (stroke) {
+    case 'Dha': bass(1); head(D.na, 0.85); break;
+    case 'Dhi': bass(0.9); head(D.tin, 0.8); break;
+    case 'Ge':  bass(0.75); break;
+    case 'Na':  head(D.na, 1); break;
+    case 'Ta':  head(D.na, 0.85); break;
+    case 'Tin': head(D.tin, 0.9); break;
+    case 'Ka':  head(D.ka, 1); break;
+    default: throw new Error(`Unknown dholak stroke ${stroke}`);
+  }
+}
+
+// ── Dhol ────────────────────────────────────────────────────────────────────
+// The big Punjabi barrel drum: "dagga" (beater on the bass side, deep and long) and "tilli"
+// (the cane stick on the treble side, a dry crack).
+const DHOL = {
+  level: 0.42, pan: 0.16, glue: 0.45,
+  dagga: { f: 66, glide: 0.55, glideSec: 0.04, partials: [[1, 1, 0.55], [1.62, 0.32, 0.22], [2.2, 0.14, 0.12], [2.9, 0.06, 0.07]], thump: 0.45 },
+  tilli: { f: 860, partials: [[1, 0.45, 0.07], [1.73, 0.34, 0.05], [2.41, 0.22, 0.04], [3.2, 0.10, 0.03]], crack: 0.55 },
+};
+const F_CRACK = [biquad('bandpass', 2300, 1.4)];
+function dholStroke(mono, rng, t, stroke, vel) {
+  const D = DHOL, i0 = Math.round(t * SR), a = vel * D.level;
+  if (stroke === 'dagga') {
+    membraneHit(mono, i0, D.dagga.f * (0.98 + 0.04 * rng()), D.dagga.glide, D.dagga.glideSec, D.dagga.partials, a, rng);
+    noiseHit(mono, i0, rng, a * D.dagga.thump, 0.008, F_THUMP, 0.06);
+  } else {
+    membraneHit(mono, i0, D.tilli.f * (0.98 + 0.04 * rng()), 0, 0.01, D.tilli.partials, a, rng);
+    noiseHit(mono, i0, rng, a * D.tilli.crack, 0.005, F_CRACK, 0.05);
+  }
+}
+
+// ── Claps ───────────────────────────────────────────────────────────────────
+// A hand clap = a few micro-bursts a few ms apart, band-passed around 1.2 kHz, plus a short tail.
+const CLAP = { level: 0.63 };
+const F_CLAP = [biquad('bandpass', 1250, 0.9), biquad('highpass', 450)];
+function clapHit(bus, rng, t, vel, pan) {
+  const i0 = Math.round(t * SR);
+  if (i0 < 0 || i0 >= N) return;
+  const len = Math.min(N - i0, Math.round(0.16 * SR));
+  const x = new Float64Array(len);
+  const bursts = [0, 0.0085, 0.0175, 0.027];
+  for (let b = 0; b < bursts.length; b++) {
+    const s = Math.round(bursts[b] * SR), dec = b === bursts.length - 1 ? 0.045 : 0.0035, r = Math.exp(-1 / (dec * SR));
+    let e = (b === bursts.length - 1 ? 1 : 0.75) * (0.85 + 0.3 * rng());
+    for (let i = s; i < len; i++) { x[i] += (rng() * 2 - 1) * e; e *= r; if (e < 1e-4) break; }
+  }
+  for (const f of F_CLAP) filter(x, f);
+  const [gL, gR] = panGains(pan), a = vel * CLAP.level;
+  for (let i = 0; i < len; i++) { bus.L[i0 + i] += x[i] * a * gL; bus.R[i0 + i] += x[i] * a * gR; }
+}
+
+// ── Ghungroo / jingles ──────────────────────────────────────────────────────
+// A cluster of tiny bells (short high pings) with a breath of "tss" — the dancer's anklets.
+const JINGLE = { level: 0.085, pings: 7 };
+const F_TSS = [biquad('highpass', 6000), biquad('lowpass', 10000)];
+function jingleHit(bus, rng, t, vel, pan) {
+  const i0 = Math.round(t * SR);
+  if (i0 < 0 || i0 >= N) return;
+  const len = Math.min(N - i0, Math.round(0.14 * SR));
+  scratchA.fill(0, 0, len);
+  const a = vel * JINGLE.level;
+  for (let p = 0; p < JINGLE.pings; p++) {
+    const s = Math.round(rng() * 0.022 * SR), f = 3900 + rng() * 3400, t60 = 0.04 + rng() * 0.07;
+    addDampedSine(scratchA, s, len - s, f, a * (0.4 + 0.6 * rng()), 6.91 / t60, rng() * TAU);
+  }
+  noiseHit(scratchA, 0, rng, a * 0.5, 0.006, F_TSS, 0.05);
+  const [gL, gR] = panGains(pan);
+  for (let i = 0; i < len; i++) { bus.L[i0 + i] += scratchA[i] * gL; bus.R[i0 + i] += scratchA[i] * gR; }
+}
+
+// ── Cymbal ──────────────────────────────────────────────────────────────────
+// Soft crash: filtered noise plus a handful of inharmonic metal partials. 'swell' is the same
+// sound reversed, rising into its cue.
+const CYMBAL = { level: 0.072, t60: 2.4, partials: [3120, 4410, 5230, 6380, 7710, 8890] };
+const F_CYM = [biquad('highpass', 3200), biquad('lowpass', 10500), biquad('lowpass', 10500)];
+function cymbalHit(bus, rng, at, kind, level, swellLen = 1.2) {
+  const C = CYMBAL, len = Math.round((kind === 'swell' ? swellLen : C.t60) * SR);
+  const x = new Float64Array(len);
+  for (let i = 0; i < len; i++) x[i] = rng() * 2 - 1;
+  for (const f of F_CYM) filter(x, f);
+  const metal = new Float64Array(len);
+  for (const f of C.partials) addDampedSine(metal, 0, len, f * (0.99 + 0.02 * rng()), 0.35 / C.partials.length, 6.91 / (C.t60 * 0.8), rng() * TAU);
+  const [gL, gR] = panGains(0.1);
+  for (let i = 0; i < len; i++) {
+    const u = i / len;
+    const e = kind === 'swell' ? u ** 2.2 : Math.exp(-6.91 * i / (C.t60 * SR)) * Math.min(1, i / 60);
+    const v = (kind === 'swell' ? x[i] : x[i] + metal[i] * 2) * e * level * C.level;
+    const n = kind === 'swell' ? Math.round(at * SR) - len + i : Math.round(at * SR) + i;
+    if (n < 0 || n >= N) continue;
+    bus.L[n] += v * gL;
+    bus.R[n] += v * gR;
   }
 }
 
@@ -573,11 +934,11 @@ const SWARMANDAL = {
   pickPos: 0.22, pickSoftHz: 3600,   // plectrum position / softness → mellow, not harsh
   chorusCents: 4, chorusLevel: 0.6,  // each course = two strings a hair apart
 };
-function ksString(out, len, f, rng) {
+function ksString(out, len, f, rng, P = SWARMANDAL) {
   const period = SR / f;
-  const sProd = Math.min(0.25, SWARMANDAL.hfDecayRate / (f * (1 - Math.cos(TAU * SWARMANDAL.hfDecayHz / SR))));
+  const sProd = Math.min(0.25, P.hfDecayRate / (f * (1 - Math.cos(TAU * P.hfDecayHz / SR))));
   const S = 0.5 - Math.sqrt(0.25 - sProd);            // loss filter y = ρ·((1−S)·x[n] + S·x[n−1]), delay ≈ S
-  const rho = 10 ** (-3 / (f * SWARMANDAL.ringSec));
+  const rho = 10 ** (-3 / (f * P.ringSec));
   const whole = Math.floor(period - S - 0.1);         // leaves 0.1‥1.1 samples for the all-pass
   const frac = period - S - whole;
   const C = (1 - frac) / (1 + frac);
@@ -589,7 +950,7 @@ function ksString(out, len, f, rng) {
   const shape = new Float64Array(WARM + whole);
   let power = 0;
   for (let k = 1; k * f < 9000 && k < period / 2; k++) {
-    const a = Math.abs(Math.sin(Math.PI * k * SWARMANDAL.pickPos)) / k / Math.sqrt(1 + (k * f / SWARMANDAL.pickSoftHz) ** 2);
+    const a = Math.abs(Math.sin(Math.PI * k * P.pickPos)) / k / Math.sqrt(1 + (k * f / P.pickSoftHz) ** 2);
     const p = rng() * TAU, w = TAU * k / period;
     for (let i = 0; i < shape.length; i++) shape[i] += a * Math.sin(w * (i - WARM) + p);
     power += a * a / 2;
@@ -709,113 +1070,48 @@ function tanpuraPluck(bus, rng, tOn, midi, amp, pan) {
   }
 }
 
-// ── Evening-garden bed ──────────────────────────────────────────────────────
-// A dark, slowly breathing breeze (noise low-passed far below "hiss" territory) and two
-// sparse crickets. Meant to be felt rather than heard.
-const GARDEN = {
-  level: 0.0027,                // RMS of the breeze
-  breezeHz: 360,
-  crickets: [{ hz: 4380, pan: -0.6 }, { hz: 4760, pan: 0.55 }],
-  cricketLevel: 0.9,            // chirp peak relative to the breeze RMS
-  cricketEverySec: 1.5,
-};
-function renderGarden(bus, rng) {
-  const end = Math.min(N, Math.round((GARDEN_LEVEL[GARDEN_LEVEL.length - 1][0] + 0.1) * SR));
-  for (const ch of ['L', 'R']) {
-    const x = new Float64Array(end);
-    for (let i = 0; i < end; i++) x[i] = rng() * 2 - 1;
-    const lp = biquad('lowpass', GARDEN.breezeHz);
-    filter(filter(filter(x, lp), lp), biquad('highpass', 110));
-    let sum = 0;
-    for (let i = 0; i < end; i++) sum += x[i] * x[i];
-    const norm = GARDEN.level / Math.sqrt(sum / end);
-    const p1 = rng() * TAU, p2 = rng() * TAU;
-    for (let i = 0; i < end; i++) {
-      const t = i / SR;   // slow gusts
-      bus[ch][i] += x[i] * norm * (0.72 + 0.28 * Math.sin(TAU * 0.13 * t + p1)) * (0.85 + 0.15 * Math.sin(TAU * 0.37 * t + p2));
-    }
-  }
-  for (const cricket of GARDEN.crickets) {
-    const [gL, gR] = panGains(cricket.pan);
-    for (let t = 0.5 + rng() * 1.2; t < end / SR; t += GARDEN.cricketEverySec * (0.7 + 0.6 * rng())) {
-      const pulses = rng() < 0.35 ? 4 : 3, a = GARDEN.level * GARDEN.cricketLevel * (0.6 + 0.4 * rng());
-      const pulseN = Math.round(0.015 * SR);
-      for (let p = 0; p < pulses; p++) {
-        const i0 = Math.round((t + p * 0.03) * SR);
-        for (let i = 0; i < pulseN && i0 + i < end; i++) {
-          const v = a * (0.5 - 0.5 * Math.cos(TAU * i / pulseN)) * Math.sin(TAU * cricket.hz * (1 + 0.004 * p) * i / SR);
-          bus.L[i0 + i] += v * gL;
-          bus.R[i0 + i] += v * gR;
-        }
-      }
-    }
-  }
-}
 
 // ════════════════════════════════════════════════════════════════════════════
 //  4. ARRANGEMENT — turns the tables of section 1 into notes
 // ════════════════════════════════════════════════════════════════════════════
-// The piano melody reads the same random "touch" stream as the accompaniment, but from this
-// fixed position — so adding, removing or rewriting accompaniment bars never re-rolls the
-// melody (this is what kept 0–39 s sample-identical when the calm section lost a bar).
-const MELODY_TOUCH_OFFSET = 8044;
-
-function arrangePiano(bus) {
-  const rng = makeRng(1);
-  const touch = (v, random = rng) => clamp(v * (0.94 + 0.12 * random()), 0.05, 1);   // ±6 % velocity humanisation
-  const ARP_SHAPE = [0.95, 0.74, 0.80, 0.86, 0.92, 0.80];           // lean on the downbeat, rise towards beat 3
-  SCORE.forEach((row, bar) => {
-    const t0 = barTime(bar), pedalUp = t0 + BAR + 0.04;             // sustain pedal changes on every bar line
-    if (row.arp) {
-      for (const nt of parseArp(row.arp)) {
-        const idx = Math.round(nt.beat * 2);
-        // a few ms of human timing; where there is an extra bass note it leads the downbeat by a hair
-        const t = t0 + nt.beat * BEAT + (idx === 0 ? (row.bass ? 0.010 : 0) : (rng() - 0.4) * 0.008);
-        pianoNote(bus, rng, t, nt.midi, touch(row.vel * ARP_SHAPE[idx]), nt.ring ? t + nt.ring * BEAT : pedalUp);
-      }
-    }
-    if (row.bass) pianoNote(bus, rng, t0, midiOf(row.bass), touch(row.vel * 0.9), pedalUp);
-    if (row.roll) {   // final chord: gently rolled from the bass up, then left to ring
-      noteList(row.roll).forEach((m, i) => pianoNote(bus, rng, t0 + i * 0.016, m, touch(row.vel * (i === 0 ? 1 : 0.86)), TOTAL_SEC + 1));
+/** All chord segments: { bar, beat, beats, t0, t1, name, chord }. */
+const SEGMENTS = (() => {
+  const out = [];
+  HARMONY.forEach((row, bar) => {
+    let beat = 0;
+    for (const [name, beats] of row) {
+      if (!CHORDS[name]) throw new Error(`Unknown chord ${name} in bar ${bar}`);
+      const t0 = barTime(bar, beat), t1 = bar === HARMONY.length - 1 ? TOTAL_SEC + 2 : barTime(bar, beat + beats);
+      out.push({ bar, beat, beats, t0, t1, name, chord: CHORDS[name] });
+      beat += beats;
     }
   });
-  const lead = makeRng(1);
-  for (let i = 0; i < MELODY_TOUCH_OFFSET; i++) lead();
-  for (const line of PIANO_MELODY) {
-    for (const nt of parseMelody(line.notes)) {
-      const beat = (line.beat ?? 0) + nt.beat;
-      const t = barTime(line.bar, beat) + (lead() - 0.4) * 0.006;
-      const pedalUp = barTime(line.bar + Math.floor(beat / BEATS_PER_BAR + 1e-9) + 1) + 0.04;
-      pianoNote(bus, lead, t, nt.midi, touch(line.vel, lead), pedalUp);
-      if (line.octaveBelow) pianoNote(bus, lead, t + 0.004, nt.midi - 12, touch(line.vel * line.octaveBelow, lead), pedalUp);
-    }
-  }
-}
+  return out;
+})();
+const level = (v) => (typeof v === 'number' ? v : v ? 1 : 0);
+// downbeats that must sit exactly on the picture (no humanisation)
+const LOCKED_BARS = new Set([3, 10, 17, 19]);
+const human = (rng, bar, eighth, amount = 0.008) => (eighth === 0 && LOCKED_BARS.has(bar) ? 0 : (rng() - 0.5) * amount);
 
 function arrangeStrings(bus) {
   const rng = makeRng(2);
-  const segments = [];   // [start, end, [midi…], starts mid-bar?]
-  SCORE.forEach((row, bar) => {
-    if (!row.pad) return;
-    const t0 = barTime(bar), t1 = barTime(bar + 1);
-    if (row.padBeat3) {
-      segments.push([t0, t0 + 2 * BEAT, noteList(row.pad), false], [t0 + 2 * BEAT, t1, noteList(row.padBeat3), true]);
-    } else segments.push([t0, t1, noteList(row.pad), false]);
+  const segs = SEGMENTS.filter((s) => PLAN[s.bar]?.strings);
+  const sounding = new Map(), notes = [];   // notes shared by neighbouring chords are tied
+  segs.forEach((s, i) => {
+    const list = noteList(PLAN[s.bar].strings === 'high' ? s.chord.padHi : s.chord.pad);
+    const gap = i > 0 && segs[i - 1].t1 < s.t0 - 1e-6;
+    for (const [m, start] of sounding) if (gap || !list.includes(m)) { notes.push([start, i > 0 ? segs[i - 1].t1 : s.t0, m]); sounding.delete(m); }
+    for (const m of list) if (!sounding.has(m)) sounding.set(m, s.t0);
+    if (i === segs.length - 1) for (const [m, start] of sounding) notes.push([start, s.t1, m]);
   });
-  const sounding = new Map();   // midi → { start, quick }; notes shared by neighbouring chords are tied
-  const notes = [];
-  segments.forEach(([t0, , list, midBar], i) => {
-    for (const [m, s] of sounding) if (!list.includes(m)) { notes.push([s.start, t0, m, s.quick, midBar]); sounding.delete(m); }
-    for (const m of list) if (!sounding.has(m)) sounding.set(m, { start: t0, quick: midBar });
-    if (i === segments.length - 1) for (const [m, s] of sounding) notes.push([s.start, TOTAL_SEC + 2, m, s.quick, false]);
-  });
-  const weight = (m) => (m < 48 ? 0.9 : m > 74 ? 0.6 : m > 69 ? 0.8 : 1);   // keep basses and high violins polite
-  for (const [start, end, m, quickIn, quickOut] of notes) stringNote(bus, rng, start, end, m, weight(m), quickIn, quickOut);
+  const weight = (m) => (m < 45 ? 0.85 : m > 74 ? 0.6 : m > 69 ? 0.8 : 1);
+  for (const [start, end, m] of notes) stringNote(bus, rng, start, end, m, weight(m));
 }
 
-function arrangeFlute(bus) {
-  const rng = makeRng(3);
-  for (const phrase of FLUTE_PHRASES) {
+function arrangeFlute(bus) { playBreaths(bus, makeRng(3), BANSURI_PHRASES, flutePhrase); }
+function arrangeShehnai(bus) { playBreaths(bus, makeRng(8), SHEHNAI_PHRASES, shehnaiPhrase); }
+function playBreaths(bus, rng, phrases, render) {
+  for (const phrase of phrases) {
     const t0 = barTime(phrase.bar, phrase.beat ?? 0);
     const notes = parseMelody(phrase.notes).map((nt) => ({ t: t0 + nt.beat * BEAT, dur: nt.beats * BEAT, midi: nt.midi }));
     const tEnd = notes[notes.length - 1].t + notes[notes.length - 1].dur;
@@ -824,7 +1120,7 @@ function arrangeFlute(bus) {
     const play = () => {
       if (!breath.length) return;
       const last = breath[breath.length - 1];
-      flutePhrase(bus, rng, breath, velAt(breath[0].t), velAt(last.t + last.dur));
+      render(bus, rng, breath, velAt(breath[0].t), velAt(last.t + last.dur));
       breath = [];
     };
     for (const nt of notes) {   // a rest in the text = a new breath
@@ -834,6 +1130,151 @@ function arrangeFlute(bus) {
     }
     play();
   }
+}
+
+function arrangeSitar(bus) {
+  const rng = makeRng(9);
+  for (const line of SITAR_LINES) {
+    const t0 = barTime(line.bar, line.beat ?? 0);
+    let prev = null;
+    for (const nt of parseMelody(line.notes)) {
+      const midi = nt.midi + (line.octave ?? 0);
+      const t = t0 + nt.beat * BEAT + (rng() - 0.4) * 0.008;
+      const step = prev ? Math.abs(midi - prev.midi) : 99;
+      const bend = prev && Math.abs(prev.end - nt.beat) < 1e-6 && step > 0 && step <= 3 && rng() < 0.4;
+      sitarNote(bus, rng, t, midi, line.vel * (0.9 + 0.2 * rng()), nt.beats * BEAT, bend ? prev.midi : null);
+      prev = { midi, end: nt.beat + nt.beats };
+    }
+  }
+  for (const s of SITAR_STRUMS) {
+    noteList(s.notes).forEach((m, i) => sitarNote(bus, rng, s.at + i * 0.024, m, s.vel * (i === 0 ? 1 : 0.82), 2.2));
+  }
+}
+
+function arrangeSantoor(bus) {
+  const rng = makeRng(10);
+  PLAN.forEach((p, bar) => {
+    if (p.santoor === 'shimmer') {   // tremolo on two strings, swelling until the glissando takes over
+      const t0 = barTime(bar) + 0.15, t1 = barTime(bar) + 2.2;
+      let i = 0;
+      for (let t = t0; t < t1; t += 1 / 13, i++) {
+        const x = (t - t0) / (t1 - t0);
+        santoorNote(bus, rng, t + (rng() - 0.5) * 0.006, midiOf(i % 2 ? 'A4' : 'D5'), 0.14 + 0.42 * x * x, i % 2 ? -0.25 : 0.25);
+      }
+      return;
+    }
+    if (!p.santoor) return;
+    const vel = p.santoorVel ?? 0.4, step = p.santoor === 'arp16' ? 0.25 : 0.5;
+    const order = p.santoor === 'arp16' ? [0, 1, 2, 3, 2, 1, 2, 3] : [0, 1, 2, 3, 1, 2, 3, 2];
+    for (const s of SEGMENTS.filter((x) => x.bar === bar)) {
+      const tones = noteList(s.chord.arp);
+      for (let k = 0; k * step < s.beats - 1e-6; k++) {
+        const beat = s.beat + k * step, onBeat = Math.abs(beat - Math.round(beat)) < 1e-6;
+        const m = tones[order[k % order.length]];
+        santoorNote(bus, rng, barTime(bar, beat) + (rng() - 0.5) * 0.006, m, vel * (onBeat ? 1 : 0.78) * (0.92 + 0.16 * rng()), clamp((m - 66) / 14, -0.5, 0.5));
+      }
+    }
+  });
+}
+
+function arrangeBass(bus) {
+  const rng = makeRng(11);
+  for (const s of SEGMENTS) {
+    const p = PLAN[s.bar], v = level(p?.bass);
+    if (s.bar === HARMONY.length - 1) { bassNote(bus, s.t0, 2.3, midiOf(s.chord.bass), 1); continue; }   // final hit
+    if (!v) continue;
+    const root = midiOf(s.chord.bass), fifth = root + 7, oct = root + 12;
+    const pattern = p.dholak === 'roll' ? [[0, root, 1.8]]
+      : s.beats >= 4 ? [[0, root, 1.3], [1.5, root, 0.4], [2, fifth, 0.9], [3, oct, 0.35], [3.5, fifth, 0.4]]
+        : [[0, root, 0.9], [1, root, 0.35], [1.5, fifth, 0.45]];
+    for (const [beat, m, len] of pattern) {
+      const t = barTime(s.bar, s.beat + beat) + (beat === 0 && s.beat === 0 && LOCKED_BARS.has(s.bar) ? 0 : (rng() - 0.5) * 0.006);
+      bassNote(bus, t, len * BEAT, m, v * (beat === 0 ? 1 : 0.8) * (0.94 + 0.12 * rng()));
+    }
+  }
+}
+
+// Keherwa: 8 eighth-notes per bar.
+const KEHERWA = ['Dha', 'Ge', 'Na', 'Tin', 'Na', 'Ka', 'Dhi', 'Na'];
+const KEHERWA_ACCENT = [1.0, 0.62, 0.78, 0.70, 0.88, 0.60, 0.92, 0.74];
+const FILL_END = [['Na', 0.70], ['Ta', 0.76], ['Ta', 0.86], ['Na', 1.0]];        // beat 4 in sixteenths
+function arrangeDholak(bus) {
+  const rng = makeRng(12), mono = new Float64Array(N);
+  const hit = (t, stroke, vel, bassScale) => dholakStroke(mono, rng, t, stroke, clamp(vel * (0.92 + 0.16 * rng()), 0, 1.3), bassScale);
+  PLAN.forEach((p, bar) => {
+    const withDhol = level(p.dhol) > 0.7 ? 0.55 : 1;
+    if (p.fill === 'pickup') FILL_END.forEach(([s, v], k) => hit(barTime(bar, 3 + k * 0.25), s, 0.45 + 0.4 * v * (k + 1) / 4, 1));
+    if (bar === HARMONY.length - 1) { hit(barTime(bar), 'Dha', 1.15, 1); return; }
+    if (p.dholak === 'roll') {   // the curtains: groove, then a crescendo roll into the climax
+      for (let e = 0; e < 4; e++) hit(barTime(bar, e * 0.5) + human(rng, bar, e), KEHERWA[e], 0.85 * KEHERWA_ACCENT[e], 1);
+      for (let k = 0; k < 4; k++) hit(barTime(bar, 2 + k * 0.25), k % 2 ? 'Ta' : 'Na', 0.55 + 0.06 * k, 1);
+      for (let k = 0; k < 8; k++) hit(barTime(bar, 3 + k * 0.125), k % 2 ? 'Ta' : 'Na', 0.72 + 0.04 * k, 1);
+      hit(barTime(bar, 3.5), 'Ge', 0.8, 1);
+      return;
+    }
+    const v = level(p.dholak);
+    if (!v) return;
+    for (let e = 0; e < 8; e++) {
+      if (p.fill === 'end' && e >= 6) continue;
+      hit(barTime(bar, e * 0.5) + human(rng, bar, e), KEHERWA[e], v * KEHERWA_ACCENT[e], withDhol);
+      if (v >= 0.8 && (e === 3 || e === 7) && rng() < 0.5) hit(barTime(bar, e * 0.5 + 0.25), 'Ka', v * 0.38, 1);   // ghost notes
+    }
+    if (p.fill === 'end') FILL_END.forEach(([s, fv], k) => hit(barTime(bar, 3 + k * 0.25) + (rng() - 0.5) * 0.004, s, v * fv, 1));
+  });
+  monoToBus(mono, bus, DHOLAK.pan, DHOLAK.glue);
+}
+
+const DHOL_CHAAL = ['dagga', 'tilli', 'tilli', 'dagga', 'dagga', 'tilli', 'dagga', 'tilli'];
+const DHOL_ACCENT = [1.0, 0.55, 0.70, 0.80, 0.90, 0.60, 0.85, 0.65];
+function arrangeDhol(bus) {
+  const rng = makeRng(13), mono = new Float64Array(N);
+  const hit = (t, stroke, vel) => dholStroke(mono, rng, t, stroke, clamp(vel * (0.92 + 0.16 * rng()), 0, 1.3));
+  PLAN.forEach((p, bar) => {
+    if (bar === HARMONY.length - 1) { hit(barTime(bar), 'dagga', 1.2); hit(barTime(bar), 'tilli', 0.9); return; }
+    if (p.dhol === 'roll') {
+      [2, 2.5, 3, 3.5].forEach((b, k) => hit(barTime(bar, b), 'dagga', 0.55 + 0.12 * k));
+      for (let k = 0; k < 4; k++) hit(barTime(bar, 3 + k * 0.25), 'tilli', 0.5 + 0.1 * k);
+      return;
+    }
+    const v = level(p.dhol);
+    if (!v) return;
+    const first = bar === 10 || bar === 17;
+    for (let e = 0; e < 8; e++) {
+      const stroke = DHOL_CHAAL[e];
+      if (v < 0.7 && !(e === 0 || e === 4)) continue;          // a lighter dhol: downbeats only
+      hit(barTime(bar, e * 0.5) + human(rng, bar, e, 0.006), stroke, v * DHOL_ACCENT[e] * (first && e === 0 ? 1.2 : 1));
+    }
+    if (v >= 0.7) hit(barTime(bar, 1.75), 'tilli', v * 0.35);   // ghost before the "and"
+  });
+  monoToBus(mono, bus, DHOL.pan, DHOL.glue);
+}
+
+function arrangeClaps(bus) {
+  const rng = makeRng(14);
+  PLAN.forEach((p, bar) => {
+    const v = level(p.claps);
+    if (!v) return;
+    for (const beat of [1, 3]) {
+      const t = barTime(bar, beat);
+      clapHit(bus, rng, t + (rng() - 0.5) * 0.004, v * (0.9 + 0.2 * rng()), -0.3);   // two people clapping
+      clapHit(bus, rng, t + 0.007 + (rng() - 0.5) * 0.004, v * (0.75 + 0.2 * rng()), 0.3);
+    }
+    if (p.fill === 'end') clapHit(bus, rng, barTime(bar, 3.5), v * 0.7, 0);
+  });
+}
+
+function arrangeJingles(bus) {
+  const rng = makeRng(15);
+  PLAN.forEach((p, bar) => {
+    const v = level(p.jingles);
+    if (!v) return;
+    for (let e = 0; e < 8; e++) jingleHit(bus, rng, barTime(bar, e * 0.5) + (rng() - 0.5) * 0.01, v * (e % 2 ? 1 : 0.5) * (0.85 + 0.3 * rng()), e % 2 ? 0.4 : -0.4);
+  });
+}
+
+function arrangeCymbal(bus) {
+  const rng = makeRng(16);
+  for (const c of CYMBALS) cymbalHit(bus, rng, c.at, c.kind, c.level, c.len);
 }
 
 const PENTATONIC = [2, 4, 6, 9, 11];   // D E F# A B as pitch classes
@@ -862,18 +1303,12 @@ function arrangeChimes(bus) {
 
 function arrangeDrone(bus) {
   const rng = makeRng(6);
-  const cycle = noteList(TANPURA.cycle), level = gainCurve(DRONE_LEVEL);
+  const cycle = noteList(TANPURA.cycle), gain = gainCurve(DRONE_LEVEL);
   const audible = (t) => [0, 1.5, 3, 4.5].some((dt) => curveAt(DRONE_LEVEL, t + dt) > -59);
   for (let beat = 0; beat * BEAT < TOTAL_SEC; beat++) {
     if (audible(beat * BEAT)) tanpuraPluck(bus, rng, beat * BEAT, cycle[beat % cycle.length], 1, beat % 2 ? 0.3 : -0.3);
   }
-  for (let n = 0; n < N; n++) { bus.L[n] *= level[n]; bus.R[n] *= level[n]; }
-}
-
-function arrangeGarden(bus) {
-  renderGarden(bus, makeRng(7));
-  const level = gainCurve(GARDEN_LEVEL);
-  for (let n = 0; n < N; n++) { bus.L[n] *= level[n]; bus.R[n] *= level[n]; }
+  for (let n = 0; n < N; n++) { bus.L[n] *= gain[n]; bus.R[n] *= gain[n]; }
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -992,7 +1427,7 @@ function measureLoudness(L, R) {
   return { integrated: lufs(mean(gated)), shortTerm };
 }
 
-// ── Look-ahead peak limiter (safety net; it only touches the tallest piano peaks) ──
+// ── Look-ahead peak limiter (safety net; it only touches the tallest drum peaks) ──
 function limiter(L, R, ceiling) {
   const look = Math.round(0.005 * SR);
   const need = new Float32Array(N).fill(1);   // gain required at n, already in place `look` samples early
@@ -1137,6 +1572,7 @@ function encodeMp3(wavStats) {
   return stats;
 }
 
+
 // ── Main ────────────────────────────────────────────────────────────────────
 const rmsDb = (L, R, a, b) => {
   let s = 0;
@@ -1158,8 +1594,9 @@ function main() {
   // 1. play every instrument onto its own bus
   const buses = {};
   const players = {
-    piano: arrangePiano, strings: arrangeStrings, flute: arrangeFlute, swarmandal: arrangeSwarmandal,
-    chimes: arrangeChimes, drone: arrangeDrone, garden: arrangeGarden,
+    strings: arrangeStrings, flute: arrangeFlute, shehnai: arrangeShehnai, sitar: arrangeSitar, santoor: arrangeSantoor,
+    bass: arrangeBass, dholak: arrangeDholak, dhol: arrangeDhol, claps: arrangeClaps, jingles: arrangeJingles,
+    cymbal: arrangeCymbal, swarmandal: arrangeSwarmandal, chimes: arrangeChimes, drone: arrangeDrone,
   };
   for (const [name, play] of Object.entries(players)) step(name, () => play((buses[name] = newBus())));
 
@@ -1216,29 +1653,20 @@ function main() {
 function report(buses, out) {
   const names = Object.keys(buses);
   const g = toDb(out.gain);
-  console.log(`\nBar  time    chord     ${names.map((n) => n.slice(0, 7).padStart(7)).join(' ')}     MIX  ST-LUFS`);
+  console.log(`\nBar  time    chords      ${names.map((n) => n.slice(0, 6).padStart(6)).join(' ')}    MIX ST-LUFS`);
   for (let bar = 0; bar <= BARS; bar++) {
     const a = Math.round(barTime(bar) * SR), b = Math.min(N, Math.round(barTime(bar + 1) * SR));
     const st = out.loudness.shortTerm.find((s) => Math.abs(s.t - b / SR) < 0.05);
+    const label = (HARMONY[bar] ?? [['tail']]).map((c) => c[0]).join('|');
     console.log(`${String(bar).padStart(3)} ${String(barTime(bar)).padStart(3)}–${String(+(b / SR).toFixed(1)).padEnd(4)} ` +
-      `${(SCORE[bar]?.chord ?? 'tail').padEnd(8)} ${names.map((n) => cell(rmsDb(buses[n].L, buses[n].R, a, b) + g)).join(' ')} ` +
-      `${cell(rmsDb(out.L, out.R, a, b))} ${st ? cell(st.lufs, 8) : ''}`);
+      `${label.padEnd(10)} ${names.map((n) => cell(rmsDb(buses[n].L, buses[n].R, a, b) + g, 6)).join(' ')} ` +
+      `${cell(rmsDb(out.L, out.R, a, b), 6)} ${st ? cell(st.lufs, 7) : ''}`);
   }
-  // how far the garden bed sits under everything else, second by second
-  const music = { L: new Float64Array(N), R: new Float64Array(N) };
-  for (const n of names) if (n !== 'garden') for (let i = 0; i < N; i++) { music.L[i] += buses[n].L[i]; music.R[i] += buses[n].R[i]; }
-  const rows = [];
-  for (let t = 0; t < 11; t++) {
-    const a = t * SR, b = a + SR, gdn = rmsDb(buses.garden.L, buses.garden.R, a, b);
-    if (gdn > -130) rows.push(`${t}s:${(rmsDb(music.L, music.R, a, b) - gdn).toFixed(1)}`);
-  }
-  console.log(`\nMusic above garden bed (dB, per second): ${rows.join('  ')}`);
   const sts = out.loudness.shortTerm, at = (t) => sts.find((s) => Math.abs(s.t - t) < 0.05)?.lufs ?? NaN;
   const peakIn = (a, b) => Math.max(...sts.filter((s) => s.t >= a && s.t <= b).map((s) => s.lufs));
   const meanIn = (a, b) => { const v = sts.filter((s) => s.t >= a && s.t <= b).map((s) => s.lufs); return v.reduce((x, y) => x + y, 0) / v.length; };
-  console.log(`Short-term LUFS: climax max (33–39 s) ${peakIn(33, 39).toFixed(1)} · calm mean (43–51 s) ${meanIn(43, 51).toFixed(1)} · ` +
-    `difference ${(peakIn(33, 39) - meanIn(43, 51)).toFixed(1)} LU · at 9 s ${at(9).toFixed(1)} · at 57 s ${at(57).toFixed(1)}`);
+  console.log(`\nShort-term LUFS: chorus max (33–39 s) ${peakIn(33, 39).toFixed(1)} · card mean (43–51 s) ${meanIn(43, 51).toFixed(1)} · ` +
+    `difference ${(peakIn(33, 39) - meanIn(43, 51)).toFixed(1)} LU · at 6 s ${at(6).toFixed(1)} · at 12 s ${at(12).toFixed(1)} · at 57 s ${at(57).toFixed(1)}`);
 }
 
 main();
-
